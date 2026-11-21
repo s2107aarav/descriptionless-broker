@@ -1,0 +1,7 @@
+* text=auto eol=lf
+
+# Preserve the bytes used by the historical checksum inventory.
+/data/** -text
+/evidence/hardening-2026-10-13/** -text
+/research/october-source/** -text
+/results.csv -text

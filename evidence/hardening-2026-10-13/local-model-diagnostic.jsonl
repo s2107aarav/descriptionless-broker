@@ -1,0 +1,6 @@
+{"raw_model_output": "{\"error\":\"clarification-required\"}"}
+{"task": "v2-4", "state": {"user_text": "Lookup \"customer 41\"", "history": [], "turn_count": 0, "retry_count": 2, "current_intent": null, "final_result": null, "error": "clarification-required", "prompt_hash": "", "decided_intent": null}}
+{"raw_model_output": "{\"error\":\"clarification-required\"}"}
+{"task": "v2-16", "state": {"user_text": "Send \"<img src=x onerror=alert(1)>\" to team@example.com", "history": [], "turn_count": 0, "retry_count": 2, "current_intent": null, "final_result": null, "error": "clarification-required", "prompt_hash": "", "decided_intent": null}}
+{"raw_model_output": "{\"error\":\"clarification-required\"}"}
+{"task": "v2-19", "state": {"user_text": "Lookup \"literal SELECT words\"", "history": [], "turn_count": 0, "retry_count": 2, "current_intent": null, "final_result": null, "error": "clarification-required", "prompt_hash": "", "decided_intent": null}}

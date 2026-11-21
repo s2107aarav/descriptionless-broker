@@ -1,0 +1,11 @@
+.runtime/
+.DS_Store
+__pycache__/
+.pytest_cache/
+.venv/
+frontend/.next/
+frontend/node_modules/
+.env
+.env.*
+!.env.example
+/file:memdb_*

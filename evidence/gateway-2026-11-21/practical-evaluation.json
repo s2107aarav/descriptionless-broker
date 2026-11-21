@@ -1,0 +1,175 @@
+{
+  "status": "passed",
+  "spec": "gateway-operations-v1",
+  "spec_sha256": "96c2d27067595e662841a7775d91915c7251753a8507087fe5cbd6ff243008fe",
+  "source_sha256": {
+    "gateway/__init__.py": "c574505abf245bb284e3f3b97aa41d2b41b8b631d2194ca59069cfc49fd32026",
+    "gateway/__main__.py": "4be6cec0f3620adaab8aa5e1cb6389b1ad0b1da43d7a9b801cce54c9f964c655",
+    "gateway/adapters.py": "96c51e46cfbccae8e26e2fe5b77789fea31d5d197a8670bf4bc0b99307fbe5be",
+    "gateway/api.py": "9317b8ffb9587bd61f7b2b6ae587a6d1d8a7126b765019cb93fb93f5db125a2a",
+    "gateway/config.py": "7442334c23e5f9e518fe8ce68b093acadd91636d0766d8fad45843213a43a35a",
+    "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+    "gateway/engine.py": "5b461aa31a01c052add8f8393dc3b3a6c223a61935e92e8811000a54509b9b40",
+    "gateway/planner.py": "ee07a3d7fb1718ecf399435a4a5a8f8fe436a29af8c7e55a265823690ac5866d",
+    "gateway/store.py": "0c42c6073547618f0cce400568aa7717cce411cb37f1a4beb3d8fa252c271023",
+    "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+    "evals/gateway_evaluate.py": "391493d439f9eedc8097bba4febf24a609f61fc5b0a41906e620416d4c82246e",
+    "evals/gateway-spec-v1.json": "96c2d27067595e662841a7775d91915c7251753a8507087fe5cbd6ff243008fe",
+    "requirements-lock.txt": "713af2a902807021f5620205e8ac08bc1b50310a46ee6f3c69606810d53c6a05"
+  },
+  "environment": {
+    "platform": "macOS-26.3.1-arm64-arm-64bit",
+    "python": "3.12.0",
+    "sqlite": "3.42.0"
+  },
+  "started_at_unix": 1795243564.891561,
+  "completed_at_unix": 1795243565.6622,
+  "correct_workflows": 20,
+  "total_workflows": 20,
+  "rows": [
+    {
+      "workflow": 1,
+      "passed": true
+    },
+    {
+      "workflow": 2,
+      "passed": true
+    },
+    {
+      "workflow": 3,
+      "passed": true
+    },
+    {
+      "workflow": 4,
+      "passed": true
+    },
+    {
+      "workflow": 5,
+      "passed": true
+    },
+    {
+      "workflow": 6,
+      "passed": true
+    },
+    {
+      "workflow": 7,
+      "passed": true
+    },
+    {
+      "workflow": 8,
+      "passed": true
+    },
+    {
+      "workflow": 9,
+      "passed": true
+    },
+    {
+      "workflow": 10,
+      "passed": true
+    },
+    {
+      "workflow": 11,
+      "passed": true
+    },
+    {
+      "workflow": 12,
+      "passed": true
+    },
+    {
+      "workflow": 13,
+      "passed": true
+    },
+    {
+      "workflow": 14,
+      "passed": true
+    },
+    {
+      "workflow": 15,
+      "passed": true
+    },
+    {
+      "workflow": 16,
+      "passed": true
+    },
+    {
+      "workflow": 17,
+      "passed": true
+    },
+    {
+      "workflow": 18,
+      "passed": true
+    },
+    {
+      "workflow": 19,
+      "passed": true
+    },
+    {
+      "workflow": 20,
+      "passed": true
+    }
+  ],
+  "controls": {
+    "denied_namespace_creates_no_file": true,
+    "changed_request_with_same_key_conflicts": true,
+    "stale_ticket_revision_preserves_current_revision": true,
+    "literal_workspace_metadata_is_excluded_from_planner_input": true
+  },
+  "audit": {
+    "executions": 122,
+    "events": 445
+  },
+  "latency": "Report counts and p50/p95 milliseconds on a single local worker-equivalent, with dispatch, automatic review, intent validation, policy, registry, local adapter and persistence timings. There is no human waiting time, live model inference, HTTP transport, or throughput claim.",
+  "latency_samples": {
+    "intent_validation": {
+      "count": 143,
+      "p50_ms": 0.0122,
+      "p95_ms": 0.0231
+    },
+    "policy_decision": {
+      "count": 122,
+      "p50_ms": 0.0011,
+      "p95_ms": 0.002
+    },
+    "submit": {
+      "count": 121,
+      "p50_ms": 0.9131,
+      "p95_ms": 1.1312
+    },
+    "scripted_approval": {
+      "count": 81,
+      "p50_ms": 0.911,
+      "p95_ms": 1.1368
+    },
+    "registry_lookup": {
+      "count": 121,
+      "p50_ms": 0.0021,
+      "p95_ms": 0.0027
+    },
+    "adapter": {
+      "count": 120,
+      "p50_ms": 0.033,
+      "p95_ms": 0.7198
+    },
+    "persistence_commit": {
+      "count": 120,
+      "p50_ms": 0.4683,
+      "p95_ms": 0.8917
+    },
+    "queue_dispatch_to_commit": {
+      "count": 121,
+      "p50_ms": 2.9339,
+      "p95_ms": 5.1402
+    },
+    "end_to_end_direct": {
+      "count": 121,
+      "p50_ms": 5.8281,
+      "p95_ms": 8.1732
+    },
+    "persistence_checkpoint": {
+      "count": 20,
+      "p50_ms": 0.646,
+      "p95_ms": 0.7946
+    }
+  },
+  "live_model": "not_run"
+}

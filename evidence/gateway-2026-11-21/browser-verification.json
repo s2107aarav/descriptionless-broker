@@ -1,0 +1,51 @@
+{
+  "browser": "isolated Chromium driven through production Next.js and loopback FastAPI",
+  "desktop_viewport": [
+    1440,
+    1100
+  ],
+  "mobile_viewport": [
+    390,
+    844
+  ],
+  "mobile_horizontal_overflow": false,
+  "uncaught_page_errors": 0,
+  "results": [
+    {
+      "operation": "create-ticket",
+      "status": "succeeded",
+      "reason": null
+    },
+    {
+      "operation": "write-file",
+      "status": "succeeded",
+      "reason": null
+    },
+    {
+      "operation": "send-message",
+      "status": "succeeded",
+      "reason": null
+    },
+    {
+      "operation": "read-file",
+      "status": "succeeded",
+      "reason": null
+    },
+    {
+      "operation": "lookup-record",
+      "status": "succeeded",
+      "reason": null
+    },
+    {
+      "operation": "write-file",
+      "status": "denied",
+      "reason": "policy_denied"
+    }
+  ],
+  "post_shutdown": {
+    "ticket_found": true,
+    "message_found_in_recipient_inbox": true,
+    "published_file_sha256": "be581693a94e75234924fd59cdf2b06bba4110b0ee323893ff654c65c38f5135",
+    "denied_file_exists": false
+  }
+}

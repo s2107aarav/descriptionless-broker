@@ -1,0 +1,19 @@
+{
+  "frozen_compatibility": {
+    "status": "passed",
+    "correct": 80,
+    "rows": 80,
+    "dataset_sha256": "57d06f0f1e41d70903d737c305e834330850e0dd4f3a881d7ce0903e1ca6261d",
+    "security_evaluation": "not_run"
+  },
+  "october_source": {
+    "status": "passed",
+    "correct": 80,
+    "rows": 80,
+    "dataset_sha256": "57d06f0f1e41d70903d737c305e834330850e0dd4f3a881d7ce0903e1ca6261d",
+    "security_evaluation": "not_run",
+    "matched_source_files": 27,
+    "passed_tests": 47,
+    "runtime_environment": "same dependency lock as current gateway verification"
+  }
+}

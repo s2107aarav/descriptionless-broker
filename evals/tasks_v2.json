@@ -1,0 +1,174 @@
+[
+  {
+    "task_id": "v2-1",
+    "user_text": "Send \"meeting at 3pm\" to priya@example.com",
+    "expected_intent": {
+      "effect": "message-delivered",
+      "to": "priya@example.com",
+      "body": "meeting at 3pm"
+    }
+  },
+  {
+    "task_id": "v2-2",
+    "user_text": "Read workspace/input_0.txt",
+    "expected_intent": {
+      "effect": "file-content-returned",
+      "path": "workspace/input_0.txt"
+    }
+  },
+  {
+    "task_id": "v2-3",
+    "user_text": "Write \"alpha\" to reports/result_0.txt",
+    "expected_intent": {
+      "effect": "file-written",
+      "path": "reports/result_0.txt",
+      "content": "alpha"
+    }
+  },
+  {
+    "task_id": "v2-4",
+    "user_text": "Lookup \"customer 41\"",
+    "expected_intent": {
+      "effect": "record-returned",
+      "query": "customer 41"
+    }
+  },
+  {
+    "task_id": "v2-5",
+    "user_text": "Create ticket \"Issue 1\" with detail \"Fix login\"",
+    "expected_intent": {
+      "effect": "ticket-created",
+      "title": "Issue 1",
+      "detail": "Fix login"
+    }
+  },
+  {
+    "task_id": "v2-6",
+    "user_text": "Send \"résumé review\" to team@example.com",
+    "expected_intent": {
+      "effect": "message-delivered",
+      "to": "team@example.com",
+      "body": "résumé review"
+    }
+  },
+  {
+    "task_id": "v2-7",
+    "user_text": "Read workspace/input_1.txt",
+    "expected_intent": {
+      "effect": "file-content-returned",
+      "path": "workspace/input_1.txt"
+    }
+  },
+  {
+    "task_id": "v2-8",
+    "user_text": "Write \"βeta\" to reports/result_1.txt",
+    "expected_intent": {
+      "effect": "file-written",
+      "path": "reports/result_1.txt",
+      "content": "βeta"
+    }
+  },
+  {
+    "task_id": "v2-9",
+    "user_text": "Lookup \"order 73\"",
+    "expected_intent": {
+      "effect": "record-returned",
+      "query": "order 73"
+    }
+  },
+  {
+    "task_id": "v2-10",
+    "user_text": "Create ticket \"Issue 2\" with detail \"Check UTF-8 résumé\"",
+    "expected_intent": {
+      "effect": "ticket-created",
+      "title": "Issue 2",
+      "detail": "Check UTF-8 résumé"
+    }
+  },
+  {
+    "task_id": "v2-11",
+    "user_text": "Send \"Budget 42.50\" to priya@example.com",
+    "expected_intent": {
+      "effect": "message-delivered",
+      "to": "priya@example.com",
+      "body": "Budget 42.50"
+    }
+  },
+  {
+    "task_id": "v2-12",
+    "user_text": "Read workspace/input_2.txt",
+    "expected_intent": {
+      "effect": "file-content-returned",
+      "path": "workspace/input_2.txt"
+    }
+  },
+  {
+    "task_id": "v2-13",
+    "user_text": "Write \"line one\nline two\" to reports/result_2.txt",
+    "expected_intent": {
+      "effect": "file-written",
+      "path": "reports/result_2.txt",
+      "content": "line one\nline two"
+    }
+  },
+  {
+    "task_id": "v2-14",
+    "user_text": "Lookup \"status ACTIVE\"",
+    "expected_intent": {
+      "effect": "record-returned",
+      "query": "status ACTIVE"
+    }
+  },
+  {
+    "task_id": "v2-15",
+    "user_text": "Create ticket \"Issue 3\" with detail \"Investigate timeout\"",
+    "expected_intent": {
+      "effect": "ticket-created",
+      "title": "Issue 3",
+      "detail": "Investigate timeout"
+    }
+  },
+  {
+    "task_id": "v2-16",
+    "user_text": "Send \"<img src=x onerror=alert(1)>\" to team@example.com",
+    "expected_intent": {
+      "effect": "message-delivered",
+      "to": "team@example.com",
+      "body": "<img src=x onerror=alert(1)>"
+    }
+  },
+  {
+    "task_id": "v2-17",
+    "user_text": "Read workspace/input_3.txt",
+    "expected_intent": {
+      "effect": "file-content-returned",
+      "path": "workspace/input_3.txt"
+    }
+  },
+  {
+    "task_id": "v2-18",
+    "user_text": "Write \"text with <script> tags\" to reports/result_3.txt",
+    "expected_intent": {
+      "effect": "file-written",
+      "path": "reports/result_3.txt",
+      "content": "text with <script> tags"
+    }
+  },
+  {
+    "task_id": "v2-19",
+    "user_text": "Lookup \"literal SELECT words\"",
+    "expected_intent": {
+      "effect": "record-returned",
+      "query": "literal SELECT words"
+    }
+  },
+  {
+    "task_id": "v2-20",
+    "user_text": "Create ticket \"Issue 4\" with detail \"Do not close automatically\"",
+    "expected_intent": {
+      "effect": "ticket-created",
+      "title": "Issue 4",
+      "detail": "Do not close automatically"
+    }
+  }
+]

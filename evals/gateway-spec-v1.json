@@ -1,0 +1,25 @@
+{
+  "version": "gateway-operations-v1",
+  "mode": "direct_typed_intents_local_adapters",
+  "incident_workflows": 20,
+  "operations_per_workflow": [
+    "create-ticket",
+    "write-file",
+    "send-message",
+    "lookup-record",
+    "read-file",
+    "update-ticket"
+  ],
+  "workflow_success": "A distinct reviewer approves each effectful operation. The ticket is present and then advances one revision, the report bytes match the request and the read receipt, and the recipient inbox contains the expected message exactly once after replay.",
+  "controls": [
+    "denied_namespace_creates_no_file",
+    "changed_request_with_same_key_conflicts",
+    "stale_ticket_revision_preserves_current_revision",
+    "literal_workspace_metadata_is_excluded_from_planner_input"
+  ],
+  "thresholds": {
+    "correct_workflows": 20,
+    "passed_controls": 4
+  },
+  "latency": "Report counts and p50/p95 milliseconds on a single local worker-equivalent, with dispatch, automatic review, intent validation, policy, registry, local adapter and persistence timings. There is no human waiting time, live model inference, HTTP transport, or throughput claim."
+}
