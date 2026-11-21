@@ -278,6 +278,83 @@ def test_unknown_mcp_ack_stops_dependents_and_no_replay(mcp_runtime, monkeypatch
             assert db.execute("SELECT attempt FROM executions WHERE id=?", (step["id"],)).fetchone()[0] == 1
 
 
+@pytest.mark.parametrize("disagreement", ["arguments", "acknowledgment", "identity"])
+def test_mcp_semantic_disagreement_is_unknown_without_replay_or_fallback(mcp_runtime, monkeypatch, disagreement):
+    service_dir, token, server = mcp_runtime
+    original = mcp_service.handle
+    calls = []
+
+    def inconsistent(root, method, params):
+        result = original(root, method, params)
+        if method == "tools/call":
+            name = params["name"]
+            calls.append(name)
+            fields = result["structuredContent"]
+            if disagreement == "arguments" and name == mcp_service.READ:
+                fields["detail"] = "A different operation"
+            elif disagreement == "acknowledgment" and name == mcp_service.READ:
+                fields["revision"] = 2
+            elif disagreement == "identity":
+                fields["ticket_id"] = "tkt-unrelated"
+            result["content"] = [{"type": "text", "text": json.dumps(fields)}]
+        return result
+
+    monkeypatch.setattr(mcp_service, "handle", inconsistent)
+    with disposable() as (root, gateway):
+        governance, _, mapping = configure_mcp(root, token, server, gateway)
+        intent = {"schema_version": "v2", "operation": "create-ticket", "title": "Latency", "detail": "Check queue"}
+        row, _ = gateway.submit(REQUESTER, "mcp-semantic-disagreement", intent)
+        approve(gateway, row["id"])
+        gateway.run_once()
+        result = gateway.get_execution(REQUESTER, row["id"])
+        assert result["status"] == "outcome_unknown" and result["receipt"] is None
+        assert result["reason"] == "mcp_outcome_unconfirmed"
+
+        # Removing the mapping cannot turn a replay into a local ticket creation.
+        governance.register(REVIEWER, mapping.model_copy(update={"enabled": False}))
+        gateway.recover()
+        replay, created = gateway.submit(REQUESTER, "mcp-semantic-disagreement", intent)
+        assert not created and replay == result and not gateway.run_once()
+        assert calls == [mcp_service.CREATE, mcp_service.READ]
+        with sqlite3.connect(service_dir / "tickets.sqlite3") as db:
+            assert db.execute("SELECT ticket_id,title,detail FROM tickets").fetchall() == [
+                ("tkt-" + row["id"], intent["title"], intent["detail"]),
+            ]
+        with gateway.store.connect() as db:
+            assert db.execute("SELECT COUNT(*) FROM tickets").fetchone()[0] == 0
+            assert db.execute("SELECT attempt FROM executions WHERE id=?", (row["id"],)).fetchone()[0] == 1
+        assert verify_audit(gateway.store) == {"executions": 1, "events": 4}
+
+
+@pytest.mark.parametrize("character", ["\U0001f6e0", "\x00"], ids=["utf8", "json-escapes"])
+def test_mcp_accepts_maximum_schema_valid_ticket_text(mcp_runtime, character):
+    service_dir, token, server = mcp_runtime
+    intent = {"schema_version": "v2", "operation": "create-ticket", "title": "T" + character * 119,
+              "detail": character * 4000}
+    with disposable() as (root, gateway):
+        configure_mcp(root, token, server, gateway)
+        row, _ = gateway.submit(REQUESTER, "mcp-text-limits", intent)
+        approve(gateway, row["id"])
+        gateway.run_once()
+        assert gateway.get_execution(REQUESTER, row["id"])["status"] == "succeeded"
+        with sqlite3.connect(service_dir / "tickets.sqlite3") as db:
+            assert db.execute("SELECT title,detail FROM tickets").fetchall() == [(intent["title"], intent["detail"])]
+        with httpx.Client(timeout=3, trust_env=False) as client:
+            headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+            escaped = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {
+                "name": mcp_service.CREATE, "arguments": {"execution_id": row["id"],
+                    "title": intent["title"], "detail": intent["detail"]},
+            }})
+            replay = client.post(server.endpoint, headers=headers, content=escaped)
+            assert replay.status_code == 200
+            assert replay.json()["result"]["structuredContent"]["ticket_id"] == "tkt-" + row["id"]
+            oversized = client.post(server.endpoint, headers=headers, content=b" " * 65537)
+            assert oversized.status_code == 413
+        with sqlite3.connect(service_dir / "tickets.sqlite3") as db:
+            assert db.execute("SELECT COUNT(*) FROM tickets").fetchone()[0] == 1
+        assert verify_audit(gateway.store)["executions"] == 1
+
+
 def test_schema_drift_is_rejected_before_external_dispatch(mcp_runtime, monkeypatch):
     service_dir, token, server = mcp_runtime
     with disposable() as (root, gateway):

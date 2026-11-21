@@ -193,5 +193,5 @@ class Workspace:
             try:
                 os.unlink(self._staging_name(execution_id), dir_fd=parent)
             except FileNotFoundError:
-                return
+                pass  # A previous unlink may have succeeded before its directory sync failed.
             os.fsync(parent)

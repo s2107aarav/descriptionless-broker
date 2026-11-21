@@ -105,7 +105,8 @@ def create_service(root):
             data = bytearray()
             async with timeout(5):
                 async for chunk in request.stream():
-                    if len(data) + len(chunk) > 16384:
+                    # Include JSON escaping of the full schema-valid title and detail.
+                    if len(data) + len(chunk) > 65536:
                         return Response(status_code=413)
                     data.extend(chunk)
             body = strict_json(data)

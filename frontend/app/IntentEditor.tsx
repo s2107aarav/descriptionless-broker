@@ -15,7 +15,7 @@ export type EntryMode = "typed" | "natural";
 
 export const OPERATIONS: Record<Operation, { description: string; fields: Field[] }> = {
   "lookup-record": {
-    description: "Retrieve a service record or ticket by its exact ID.",
+    description: "Retrieve a gateway-owned service record or ticket by its exact ID. Tickets created through MCP remain in that service and cannot be looked up here.",
     fields: [
       { name: "collection", label: "Collection", kind: "select", options: { services: "Services", tickets: "Tickets" } },
       { name: "record_id", label: "Record ID", placeholder: "gateway", maxLength: 64 },
@@ -33,7 +33,7 @@ export const OPERATIONS: Record<Operation, { description: string; fields: Field[
     ],
   },
   "update-ticket": {
-    description: "Change a ticket using its current revision.",
+    description: "Change a gateway-owned ticket using its current revision. Tickets created through MCP cannot be updated here.",
     fields: [
       { name: "ticket_id", label: "Ticket ID", placeholder: "Paste the ID from a ticket receipt", maxLength: 64 },
       { name: "expected_revision", label: "Expected revision", kind: "number", placeholder: "1" },

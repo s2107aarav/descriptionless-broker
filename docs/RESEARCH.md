@@ -13,4 +13,4 @@ Run `python -m evals.research_provenance verify` to check the frozen inventory. 
 
 The current compatibility runner passes its 80-case offline matrix with model-security status `not_run`. The October real-model result remains invalid under its predeclared gates. Its full-argument broker utility and correct invariance were 85%, baseline clean utility was 75%, and baseline attack success was 35% against a 40% gate. Zero audit string hits does not establish model immunity. The live run was not repeated as part of the gateway conversion.
 
-The published environment inventory omits two local development configuration entries. The historical Python source checksums and experimental measurements are preserved.
+To use the archived browser dashboard, start `backend.main:app` on a separate loopback port and set `NEXT_PUBLIC_BROKER_RESEARCH_API_URL` to that origin before starting or building the console. Open `/legacy-research` with the simulator's `BROKER_API_TOKEN`.

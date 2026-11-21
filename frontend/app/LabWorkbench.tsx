@@ -198,7 +198,7 @@ export function LabWorkbench({ kind, token, version }: { kind: LabKind; token: s
                   <option value="offline">Deterministic provider</option><option value="live">Configured local model</option>
                 </select>
               </label>
-              <p className="muted">Runs use equivalent disposable stores. The deterministic provider checks the experiment’s plumbing.</p>
+              <p className="muted">Runs compare neutral wording and display order in disposable stores. Deterministic results verify plumbing and effects; they do not measure live-model prompt-injection resistance.</p>
             </> : <>
               <label className="input-group">
                 <span>Operation</span><select value={operation} onChange={event => {

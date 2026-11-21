@@ -439,6 +439,66 @@ def test_file_staging_failure_leaves_destination_absent(runtime, monkeypatch):
     assert not (runtime.root / "files/reports/absent").exists()
 
 
+@pytest.mark.parametrize("failure", ["unlink", "directory_sync"])
+def test_post_commit_cleanup_failure_preserves_success_and_retries(runtime, monkeypatch, failure):
+    import errno
+
+    gateway = runtime.gateway
+    intent = action("write-file", path="reports/cleanup.txt", content="One durable publication")
+    run_id = submit_approved(gateway, "cleanup-retry", intent)
+    reports = runtime.root / "files/reports"
+    target = reports / "cleanup.txt"
+    staged = reports / (".broker-stage-" + run_id)
+    original_unlink, original_sync = os.unlink, os.fsync
+    armed = False
+
+    def after_commit(phase, _row):
+        nonlocal armed
+        if phase == "after_file_commit":
+            assert gateway.get_execution(REQUESTER, run_id)["status"] == "succeeded"
+            armed = True
+
+    def unlink(path, *args, **kwargs):
+        if armed and failure == "unlink" and path == staged.name:
+            raise OSError(errno.EACCES, "Simulated staging cleanup failure")
+        return original_unlink(path, *args, **kwargs)
+
+    def sync(fd):
+        if armed and failure == "directory_sync" and os.fstat(fd).st_ino == reports.stat().st_ino:
+            raise OSError(errno.EIO, "Simulated directory sync failure")
+        return original_sync(fd)
+
+    gateway.fault = after_commit
+    monkeypatch.setattr(os, "unlink", unlink)
+    monkeypatch.setattr(os, "fsync", sync)
+    gateway.run_once()
+    result = gateway.get_execution(REQUESTER, run_id)
+    events = gateway.get_execution(REVIEWER, run_id, events=True)
+    identity = target.stat().st_ino
+    assert result["status"] == "succeeded" and result["receipt"] is not None
+    assert target.read_text() == intent["content"]
+    assert staged.exists() == (failure == "unlink")
+    with runtime.store.connect() as db:
+        assert db.execute("SELECT cleanup_path FROM executions WHERE id=?", (run_id,)).fetchone()[0] == intent["path"]
+
+    # Recreating the worker resets its backoff, but must not forget an unsynced unlink.
+    recovered = Gateway(runtime.store, gateway.policy, gateway.registry, runtime.workspace)
+    recovered.recover()
+    with runtime.store.connect() as db:
+        assert db.execute("SELECT cleanup_path FROM executions WHERE id=?", (run_id,)).fetchone()[0] == intent["path"]
+    armed = False
+    recovered.cleanup_retry_at.clear()
+    recovered.recover()
+    replay, created = recovered.submit(REQUESTER, "cleanup-retry", intent)
+    assert not created and replay == result and not recovered.run_once()
+    assert target.stat().st_ino == identity and target.read_text() == intent["content"]
+    assert not staged.exists()
+    assert recovered.get_execution(REVIEWER, run_id, events=True) == events
+    with runtime.store.connect() as db:
+        assert db.execute("SELECT attempt,cleanup_path FROM executions WHERE id=?", (run_id,)).fetchone()[:] == (1, None)
+    assert verify_audit(runtime.store) == {"executions": 1, "events": 4}
+
+
 def test_non_loopback_connections_are_rejected(runtime):
     with TestClient(create_app(Settings(runtime.root)), base_url="http://127.0.0.1", client=("192.0.2.10", 50000)) as client:
         response = client.get("/api/v1/session", headers=headers(runtime, "requester"))

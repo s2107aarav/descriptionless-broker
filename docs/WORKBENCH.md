@@ -63,7 +63,7 @@ Set `GATEWAY_OLLAMA_MODEL` to enable optional natural-language workflow drafts a
 
 The operator is trusted to provision the correct loopback MCP endpoint and protect service files. The gateway forwards only that service's token. Tool descriptions and input schemas are displayed only to reviewers, with the configured token redacted if echoed. Raw structured or text tool output is never put in model context. The product does not apply OS sandboxing to arbitrary MCP peers. That arbitrary execution path is outside the supported profile.
 
-The workbench uses the gateway's existing single local scope. The standalone ticket service owns its own ticket database. A local `lookup-record` in the gateway queries gateway-owned tickets, so use the MCP service's read tool or direct local inspection for a ticket created there. Registering a mapping creates an immutable revision. Local execution remains selectable when the MCP adapter is disabled and the caller submits a fresh request.
+The workbench uses the gateway's existing single local scope. The standalone ticket service owns its own ticket database. Both `lookup-record` and `update-ticket` operate only on gateway-owned tickets. An MCP-created ticket ID returns `record_not_found` there. Inspect an external ticket with the service's `get_incident_ticket` tool using the originating **execution ID**, or query its database as above. External update operations and cross-adapter federation are outside this profile. Registering a mapping creates an immutable revision. Local execution remains selectable when the MCP adapter is disabled and the caller submits a fresh request.
 
 ## Durability and limits
 
@@ -92,5 +92,3 @@ SQLite schema revision 2 migrates an existing V1 runtime transactionally. Old ac
 | `POST /api/v1/mcp/mappings` | Reviewer publishes an enabled or disabled mapping revision. |
 | `POST /api/v1/labs/comparison`, `POST /api/v1/labs/recovery` | Run fixed, isolated scenarios and return stored evidence. |
 | `GET /api/v1/labs[/{id}]` | Read the caller's own evidence and trace results. |
-
-**Portfolio description.** Descriptionless Broker is a governed local execution gateway that routes typed model proposals through independent approval and deterministic adapter mapping. Its workbench demonstrates MCP-backed workflows, matched model-context comparisons, and independently inspected subprocess crash recovery.
