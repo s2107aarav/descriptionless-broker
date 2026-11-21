@@ -9,7 +9,7 @@ from contextlib import contextmanager
 from .config import Principal, SCOPE, ensure_private_directory, ensure_private_file
 from .contracts import canonical, digest
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 ACTIVE_STATES = ("awaiting_approval", "ready", "executing")
 TERMINAL_STATES = frozenset({"denied", "expired", "failed", "succeeded", "outcome_unknown"})
 TRANSITIONS = {
@@ -62,6 +62,39 @@ SCHEMA = (
     """CREATE INDEX inbox_owner ON inbox (recipient,scope,created_at,id)""",
 )
 
+EXPANSION_SCHEMA = (
+    "ALTER TABLE executions ADD COLUMN planned_registry_revision TEXT",
+    "ALTER TABLE executions ADD COLUMN planned_adapter_id TEXT",
+    "ALTER TABLE executions ADD COLUMN mapping_revision INTEGER",
+    """UPDATE executions SET planned_registry_revision='legacy-unpinned'
+        WHERE status IN ('awaiting_approval','ready','executing')""",
+    """CREATE TABLE mcp_mapping_revisions (
+        revision INTEGER PRIMARY KEY, adapter_id TEXT NOT NULL, server_id TEXT NOT NULL,
+        server_binding TEXT NOT NULL, tool TEXT NOT NULL, schema_sha256 TEXT NOT NULL,
+        priority INTEGER NOT NULL, enabled INTEGER NOT NULL CHECK(enabled IN (0,1)),
+        actor TEXT NOT NULL REFERENCES principals(name), recorded_at REAL NOT NULL
+    )""",
+    "CREATE INDEX mcp_mapping_heads ON mcp_mapping_revisions (adapter_id, revision DESC)",
+    """CREATE TABLE workflows (
+        id TEXT PRIMARY KEY, requester TEXT NOT NULL REFERENCES principals(name), scope TEXT NOT NULL,
+        request_key TEXT NOT NULL, plan_hash TEXT NOT NULL, policy_revision TEXT NOT NULL,
+        registry_revision TEXT NOT NULL, status TEXT NOT NULL, created_at REAL NOT NULL,
+        UNIQUE(requester,scope,request_key)
+    )""",
+    "CREATE INDEX workflow_queue ON workflows (status,created_at,id)",
+    """CREATE TABLE workflow_nodes (
+        workflow_id TEXT NOT NULL REFERENCES workflows(id), node_id TEXT NOT NULL, position INTEGER NOT NULL,
+        definition_json TEXT NOT NULL, status TEXT NOT NULL, reason TEXT, outputs_json TEXT,
+        execution_id TEXT UNIQUE REFERENCES executions(id), PRIMARY KEY(workflow_id,node_id),
+        UNIQUE(workflow_id,position)
+    )""",
+    """CREATE TABLE lab_runs (
+        id TEXT PRIMARY KEY, owner TEXT NOT NULL REFERENCES principals(name), scope TEXT NOT NULL,
+        kind TEXT NOT NULL, created_at REAL NOT NULL, report_json TEXT NOT NULL
+    )""",
+    "CREATE INDEX lab_owner ON lab_runs (owner,scope,created_at,id)",
+)
+
 
 @contextmanager
 def runtime_lock(root):
@@ -100,7 +133,11 @@ class Store:
             if current == 0:
                 for ddl in SCHEMA:
                     db.execute(ddl)
-                db.execute("PRAGMA user_version = 1")
+                current = 1
+            if current == 1:
+                for ddl in EXPANSION_SCHEMA:
+                    db.execute(ddl)
+                db.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
             elif current != SCHEMA_VERSION:
                 raise RuntimeError("Unsupported gateway database schema")
         with self.connect() as db:
@@ -166,7 +203,8 @@ def append_event(db, row, detail, actor, *, now=None):
 def transition(db, row, state, detail, *, now, actor=None, reason=None, receipt=None, **updates):
     if state not in TRANSITIONS[row["status"]]:
         raise RuntimeError("Illegal execution transition")
-    allowed = {"approved_by", "adapter_id", "adapter_version", "registry_revision", "attempt", "stage_json", "cleanup_path"}
+    allowed = {"approved_by", "adapter_id", "adapter_version", "registry_revision", "attempt", "stage_json",
+               "cleanup_path", "mapping_revision"}
     if updates.keys() - allowed:
         raise RuntimeError("Invalid transition field")
     updates.update(status=state, reason=reason, updated_at=now)
@@ -195,6 +233,7 @@ def purge_receipts(store, cutoff):
         # The operation rows and idempotency keys are retained.
         count = db.execute("""UPDATE executions SET receipt_json=NULL, intent_json=NULL
             WHERE updated_at<? AND status IN ('succeeded','failed','denied','expired','outcome_unknown')
+            AND NOT EXISTS (SELECT 1 FROM workflow_nodes AS n WHERE n.execution_id=executions.id AND n.status='linked')
             AND (intent_json IS NOT NULL OR receipt_json IS NOT NULL)""", (cutoff,)).rowcount
     return count
 
@@ -207,14 +246,19 @@ def verify_audit(store):
         for table, operation in (("tickets", "create-ticket"), ("inbox", "send-message")):
             mismatch = db.execute(f"""SELECT 1 FROM executions AS e
                 LEFT JOIN {table} AS d ON d.origin_execution=e.id
-                WHERE e.operation=? AND ((e.status='succeeded' AND d.id IS NULL)
-                    OR (e.status<>'succeeded' AND d.id IS NOT NULL) OR d.scope<>e.scope) LIMIT 1""", (operation,)).fetchone()
+                WHERE e.operation=? AND ((e.status='succeeded' AND e.mapping_revision IS NULL AND d.id IS NULL)
+                    OR ((e.status<>'succeeded' OR e.mapping_revision IS NOT NULL) AND d.id IS NOT NULL)
+                    OR d.scope<>e.scope) LIMIT 1""", (operation,)).fetchone()
             if mismatch:
                 raise RuntimeError("A transactional effect and its audit record disagree")
             incorrect_origin = db.execute(f"""SELECT 1 FROM {table} AS d JOIN executions AS e ON e.id=d.origin_execution
                 WHERE e.operation<>? LIMIT 1""", (operation,)).fetchone()
             if incorrect_origin:
                 raise RuntimeError("A transactional effect has the wrong originating operation")
+        if db.execute("""SELECT 1 FROM executions e LEFT JOIN mcp_mapping_revisions m ON m.revision=e.mapping_revision
+            WHERE e.mapping_revision IS NOT NULL AND (m.revision IS NULL OR e.adapter_id<>m.adapter_id)
+            LIMIT 1""").fetchone():
+            raise RuntimeError("An external execution has no matching mapping revision")
     by_id = {row["id"]: [] for row in rows}
     for event in events:
         if event["execution_id"] not in by_id:

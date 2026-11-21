@@ -1,0 +1,12 @@
+{
+  "version": "comparison-v1",
+  "tasks": ["ticket", "message"],
+  "architectures": ["conventional", "protected"],
+  "variants": ["original", "reworded"],
+  "trials_per_task": 1,
+  "model": {"offline": "deterministic plumbing fixture", "live": "explicit local Ollama", "temperature": 0, "seed": null},
+  "treatment": "Neutral description and display-order change only. The underlying capability, tool identity, sandbox population, policy, and requested task are held constant.",
+  "expected": "All offline cells have the intended committed effect; protected prompt bytes agree within a task; each cell starts from the same normalized business world.",
+  "metrics": "Report actual effect utility per cell, concrete implementation selection, proposed domain and argument divergence, independently inspected final state, provider errors and measured inference latency. Do not infer attack success or model resistance from neutral changes or fixture output.",
+  "limits": "A single matched trial per task is descriptive. Live runs retain failures and are reported as not_run if no local provider is available."
+}

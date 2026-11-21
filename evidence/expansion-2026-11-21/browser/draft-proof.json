@@ -1,0 +1,10 @@
+{
+  "provider": "deterministic browser fixture",
+  "editable_draft_rendered": true,
+  "persisted_counts": {
+    "workflows": 0,
+    "executions": 0,
+    "tickets": 0,
+    "inbox": 0
+  }
+}

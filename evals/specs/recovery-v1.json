@@ -1,0 +1,19 @@
+{
+  "version": "recovery-v1",
+  "oracle": "Inspect SQLite business rows and lifecycle, then independently check target and staging inode, digest, file size and durable checkpoint. Replay the original key and count the side effects again.",
+  "cases": {
+    "send-message": {
+      "after_claim_commit": "proven_success",
+      "before_sql_commit": "proven_success",
+      "after_sql_commit": "proven_success"
+    },
+    "write-file": {
+      "after_claim_commit": "known_no_effect",
+      "after_file_stage": "outcome_unknown",
+      "after_file_publish": "proven_success",
+      "after_file_commit": "proven_success",
+      "after_file_publish:remove-staging": "outcome_unknown"
+    }
+  },
+  "limits": "Process termination on the tested host filesystem. Hardware power loss is outside this experiment."
+}

@@ -1,0 +1,7 @@
+{
+  "version": "mcp-bridge-v1",
+  "protocol": "2025-11-25 JSON-response Streamable HTTP subset",
+  "workload": "One independently persisted ticket per approved request; preserve byte-exact mapped title and detail and execution identity.",
+  "controls": ["direct and governed invocation", "role and allowlist checks", "mapping revision", "schema drift", "uncertain acknowledgment and no fallback"],
+  "oracle": "Inspect the service database and gateway ledger independently; local fallback and repeated external effects must be absent after an uncertain call."
+}

@@ -40,16 +40,21 @@ Each step has its own approval and receipt. The incident sequence can partially 
 
 The typed path runs without a model or third-party credentials. For natural-language proposals, set `GATEWAY_OLLAMA_MODEL` to an installed local model before starting the API. The console displays the proposed fields for review before submission. If the provider is unavailable, the gateway returns an explicit error.
 
+### Engineering workbench
+
+The console also compiles typed workflows, reviews mappings to an independently running MCP ticket service, and runs isolated comparison and recovery experiments. The [workbench walkthrough](docs/WORKBENCH.md) sets up the MCP service and demonstrates a workflow that creates a ticket, writes its reference to a report, and notifies the reviewer. The evaluation command runs the same class of workflow without entering credentials in a browser.
+
 ## Verify
 
 ```sh
 python -m pytest -q
 python -m evals.gateway_evaluate --out .runtime/gateway-evaluation.json
 python -m evals.run --mode offline --out .runtime/research-evaluation.json
+python -m evals.expansion_evaluate --out .runtime/expansion-evaluation
 cd frontend
 npm run lint
 npm exec -- tsc --noEmit
 npm run build
 ```
 
-[Architecture and operations](docs/GATEWAY.md) describes the public API, approval policy, data model, failure states, and recovery. [Research provenance](docs/RESEARCH.md) explains the retained mock harness and historical evidence. [Practical verification results](evidence/gateway-2026-11-21/README.md) records the executed workload and browser checks.
+[Architecture and operations](docs/GATEWAY.md) describes the public API, approval policy, data model, failure states, and recovery. [Research provenance](docs/RESEARCH.md) explains the retained mock harness and historical evidence. [Gateway verification](evidence/gateway-2026-11-21/README.md) and [workbench verification](evidence/expansion-2026-11-21/README.md) record the executed workloads and browser checks.

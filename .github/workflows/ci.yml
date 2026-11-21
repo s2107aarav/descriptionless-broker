@@ -17,10 +17,13 @@ jobs:
       - run: python -m evals.research_provenance verify
       - run: python -m evals.run --mode offline --out .runtime/research-evaluation.json
       - run: python -m evals.gateway_evaluate --out .runtime/gateway-evaluation.json
+      - run: python -m evals.expansion_evaluate --out .runtime/expansion-evaluation
       - uses: actions/upload-artifact@v4
         with:
           name: evaluations-${{ matrix.os }}
-          path: .runtime/*evaluation.json
+          path: |
+            .runtime/*evaluation.json
+            .runtime/expansion-evaluation/**
           include-hidden-files: true
   frontend:
     runs-on: ubuntu-latest

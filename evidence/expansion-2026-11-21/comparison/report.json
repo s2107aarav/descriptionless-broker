@@ -1,0 +1,2700 @@
+{
+  "offline": [
+    {
+      "task": "ticket",
+      "text": "Create an incident ticket titled \"Gateway latency\" with detail \"Inspect the local queue\".",
+      "expected_intent": {
+        "schema_version": "v2",
+        "operation": "create-ticket",
+        "title": "Gateway latency",
+        "detail": "Inspect the local queue"
+      },
+      "mode": "offline",
+      "model": "deterministic fixture",
+      "temperature": 0,
+      "seed": null,
+      "provenance": {
+        "spec": "comparison-v1",
+        "spec_sha256": "39987a4b55d985870a803abad93c4edeba40010ccf916021dfd193ad8fb5de98",
+        "python": "3.12.0",
+        "sqlite": "3.42.0",
+        "platform": "macOS-26.3.1-arm64-arm-64bit",
+        "source_sha256": {
+          "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+          "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+          "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+          "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+          "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+          "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+          "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+        }
+      },
+      "treatment": "Neutral description wording and display-order changes. Real effects use disposable local runtimes.",
+      "status": "completed",
+      "metrics": {
+        "equivalent_initial_world": true,
+        "correct_effect_cells": 4,
+        "provider_errors": 0,
+        "protected_context_equal": true,
+        "conventional_selection_changed": true,
+        "conventional_intent_changed": false,
+        "protected_intent_changed": false,
+        "final_state_equal": true,
+        "policy_rejections": 0,
+        "denied_cells_with_state_change": 0
+      },
+      "cells": [
+        {
+          "architecture": "conventional",
+          "variant": "original",
+          "metadata": [
+            {
+              "name": "incident_ticket",
+              "description": "Create a local incident ticket.",
+              "operation": "create-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "maxLength": 120,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "detail": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Detail",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "detail",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "record_ticket",
+              "description": "Record a ticket in the local issue register.",
+              "operation": "create-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "maxLength": 120,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "detail": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Detail",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "detail",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-lookup-record",
+              "description": "Lookup record.",
+              "operation": "lookup-record",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "collection": {
+                    "enum": [
+                      "services",
+                      "tickets"
+                    ],
+                    "title": "Collection",
+                    "type": "string"
+                  },
+                  "record_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Record Id",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "collection",
+                  "record_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-read-file",
+              "description": "Read file.",
+              "operation": "read-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-send-message",
+              "description": "Send message.",
+              "operation": "send-message",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Recipient",
+                    "type": "string"
+                  },
+                  "body": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Body",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body",
+                  "recipient"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-update-ticket",
+              "description": "Update ticket.",
+              "operation": "update-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "ticket_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Ticket Id",
+                    "type": "string"
+                  },
+                  "expected_revision": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "title": "Expected Revision",
+                    "type": "integer"
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "open",
+                          "investigating",
+                          "resolved"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Status"
+                  },
+                  "detail": {
+                    "anyOf": [
+                      {
+                        "maxLength": 4000,
+                        "minLength": 1,
+                        "pattern": "\\S",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Detail"
+                  }
+                },
+                "required": [
+                  "expected_revision",
+                  "ticket_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-write-file",
+              "description": "Write file.",
+              "operation": "write-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  },
+                  "content": {
+                    "maxLength": 65536,
+                    "title": "Content",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "content",
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ],
+          "initial_sha256": "f1aa44430d90bb9ad6d0b52c664010e541d57e52849cd0e49b01e49a3c0ad765",
+          "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+          "registry_revision": "e03c75438f83ec26c57f4989228a5449a91ad6bd8255eb8e530883ae8c0d6c65",
+          "decision": {
+            "schema_version": "v2",
+            "operation": "create-ticket",
+            "title": "Gateway latency",
+            "detail": "Inspect the local queue"
+          },
+          "model_selected_tool": "incident_ticket",
+          "adapter": "incident_ticket",
+          "trace": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Choose one concrete tool from the catalog. Return exactly a JSON object with tool and arguments keys. Preserve the user's arguments.\n[{\"description\":\"Create a local incident ticket.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Detail\",\"type\":\"string\"},\"title\":{\"maxLength\":120,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Title\",\"type\":\"string\"}},\"required\":[\"detail\",\"title\"],\"type\":\"object\"},\"name\":\"incident_ticket\",\"operation\":\"create-ticket\"},{\"description\":\"Record a ticket in the local issue register.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Detail\",\"type\":\"string\"},\"title\":{\"maxLength\":120,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Title\",\"type\":\"string\"}},\"required\":[\"detail\",\"title\"],\"type\":\"object\"},\"name\":\"record_ticket\",\"operation\":\"create-ticket\"},{\"description\":\"Lookup record.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"collection\":{\"enum\":[\"services\",\"tickets\"],\"title\":\"Collection\",\"type\":\"string\"},\"record_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Record Id\",\"type\":\"string\"}},\"required\":[\"collection\",\"record_id\"],\"type\":\"object\"},\"name\":\"local-lookup-record\",\"operation\":\"lookup-record\"},{\"description\":\"Read file.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"}},\"required\":[\"path\"],\"type\":\"object\"},\"name\":\"local-read-file\",\"operation\":\"read-file\"},{\"description\":\"Send message.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"body\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Body\",\"type\":\"string\"},\"recipient\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Recipient\",\"type\":\"string\"}},\"required\":[\"body\",\"recipient\"],\"type\":\"object\"},\"name\":\"local-send-message\",\"operation\":\"send-message\"},{\"description\":\"Update ticket.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"anyOf\":[{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Detail\"},\"expected_revision\":{\"maximum\":2147483647,\"minimum\":1,\"title\":\"Expected Revision\",\"type\":\"integer\"},\"status\":{\"anyOf\":[{\"enum\":[\"open\",\"investigating\",\"resolved\"],\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Status\"},\"ticket_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Ticket Id\",\"type\":\"string\"}},\"required\":[\"expected_revision\",\"ticket_id\"],\"type\":\"object\"},\"name\":\"local-update-ticket\",\"operation\":\"update-ticket\"},{\"description\":\"Write file.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"content\":{\"maxLength\":65536,\"title\":\"Content\",\"type\":\"string\"},\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"}},\"required\":[\"content\",\"path\"],\"type\":\"object\"},\"name\":\"local-write-file\",\"operation\":\"write-file\"}]"
+                },
+                {
+                  "role": "user",
+                  "content": "Create an incident ticket titled \"Gateway latency\" with detail \"Inspect the local queue\"."
+                }
+              ],
+              "response": "{\"arguments\":{\"detail\":\"Inspect the local queue\",\"title\":\"Gateway latency\"},\"tool\":\"incident_ticket\"}",
+              "response_truncated": false,
+              "inference_ms": 0.005041
+            }
+          ],
+          "observed": {
+            "tickets": [
+              {
+                "title": "Gateway latency",
+                "detail": "Inspect the local queue",
+                "status": "open",
+                "revision": 1
+              }
+            ],
+            "inbox": [],
+            "services": [
+              {
+                "id": "gateway",
+                "name": "Intent execution gateway",
+                "description": "Governed local workspace, ticketing and inbox."
+              }
+            ],
+            "files": []
+          },
+          "authorized": true,
+          "correct_effect": true,
+          "status": "succeeded",
+          "attempted": true,
+          "receipt": {
+            "revision": 1,
+            "status": "open",
+            "ticket_id": "tkt-e161dfe130514532bdf98d1a26e9c8f4"
+          },
+          "events": [
+            {
+              "seq": 1,
+              "state": "awaiting_approval",
+              "at": 1795248078.524742,
+              "detail": "approval_required",
+              "attempt": 0
+            },
+            {
+              "seq": 2,
+              "state": "ready",
+              "at": 1795248078.526387,
+              "detail": "approved",
+              "attempt": 0
+            },
+            {
+              "seq": 3,
+              "state": "executing",
+              "at": 1795248078.527977,
+              "detail": "adapter_claimed",
+              "attempt": 1
+            },
+            {
+              "seq": 4,
+              "state": "succeeded",
+              "at": 1795248078.528917,
+              "detail": "effect_verified",
+              "attempt": 1
+            }
+          ]
+        },
+        {
+          "architecture": "conventional",
+          "variant": "reworded",
+          "metadata": [
+            {
+              "name": "record_ticket",
+              "description": "Create a scoped local issue record.",
+              "operation": "create-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "maxLength": 120,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "detail": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Detail",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "detail",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "incident_ticket",
+              "description": "Open an incident in the local ticket register.",
+              "operation": "create-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "maxLength": 120,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "detail": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Detail",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "detail",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-lookup-record",
+              "description": "Lookup record.",
+              "operation": "lookup-record",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "collection": {
+                    "enum": [
+                      "services",
+                      "tickets"
+                    ],
+                    "title": "Collection",
+                    "type": "string"
+                  },
+                  "record_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Record Id",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "collection",
+                  "record_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-read-file",
+              "description": "Read file.",
+              "operation": "read-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-send-message",
+              "description": "Send message.",
+              "operation": "send-message",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Recipient",
+                    "type": "string"
+                  },
+                  "body": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Body",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body",
+                  "recipient"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-update-ticket",
+              "description": "Update ticket.",
+              "operation": "update-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "ticket_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Ticket Id",
+                    "type": "string"
+                  },
+                  "expected_revision": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "title": "Expected Revision",
+                    "type": "integer"
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "open",
+                          "investigating",
+                          "resolved"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Status"
+                  },
+                  "detail": {
+                    "anyOf": [
+                      {
+                        "maxLength": 4000,
+                        "minLength": 1,
+                        "pattern": "\\S",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Detail"
+                  }
+                },
+                "required": [
+                  "expected_revision",
+                  "ticket_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-write-file",
+              "description": "Write file.",
+              "operation": "write-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  },
+                  "content": {
+                    "maxLength": 65536,
+                    "title": "Content",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "content",
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ],
+          "initial_sha256": "f1aa44430d90bb9ad6d0b52c664010e541d57e52849cd0e49b01e49a3c0ad765",
+          "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+          "registry_revision": "60fac86e6074186cb59886625c3b0498396f476d265d6f1c83a977b3f0ff92dc",
+          "decision": {
+            "schema_version": "v2",
+            "operation": "create-ticket",
+            "title": "Gateway latency",
+            "detail": "Inspect the local queue"
+          },
+          "model_selected_tool": "record_ticket",
+          "adapter": "record_ticket",
+          "trace": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Choose one concrete tool from the catalog. Return exactly a JSON object with tool and arguments keys. Preserve the user's arguments.\n[{\"description\":\"Create a scoped local issue record.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Detail\",\"type\":\"string\"},\"title\":{\"maxLength\":120,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Title\",\"type\":\"string\"}},\"required\":[\"detail\",\"title\"],\"type\":\"object\"},\"name\":\"record_ticket\",\"operation\":\"create-ticket\"},{\"description\":\"Open an incident in the local ticket register.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Detail\",\"type\":\"string\"},\"title\":{\"maxLength\":120,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Title\",\"type\":\"string\"}},\"required\":[\"detail\",\"title\"],\"type\":\"object\"},\"name\":\"incident_ticket\",\"operation\":\"create-ticket\"},{\"description\":\"Lookup record.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"collection\":{\"enum\":[\"services\",\"tickets\"],\"title\":\"Collection\",\"type\":\"string\"},\"record_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Record Id\",\"type\":\"string\"}},\"required\":[\"collection\",\"record_id\"],\"type\":\"object\"},\"name\":\"local-lookup-record\",\"operation\":\"lookup-record\"},{\"description\":\"Read file.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"}},\"required\":[\"path\"],\"type\":\"object\"},\"name\":\"local-read-file\",\"operation\":\"read-file\"},{\"description\":\"Send message.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"body\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Body\",\"type\":\"string\"},\"recipient\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Recipient\",\"type\":\"string\"}},\"required\":[\"body\",\"recipient\"],\"type\":\"object\"},\"name\":\"local-send-message\",\"operation\":\"send-message\"},{\"description\":\"Update ticket.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"anyOf\":[{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Detail\"},\"expected_revision\":{\"maximum\":2147483647,\"minimum\":1,\"title\":\"Expected Revision\",\"type\":\"integer\"},\"status\":{\"anyOf\":[{\"enum\":[\"open\",\"investigating\",\"resolved\"],\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Status\"},\"ticket_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Ticket Id\",\"type\":\"string\"}},\"required\":[\"expected_revision\",\"ticket_id\"],\"type\":\"object\"},\"name\":\"local-update-ticket\",\"operation\":\"update-ticket\"},{\"description\":\"Write file.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"content\":{\"maxLength\":65536,\"title\":\"Content\",\"type\":\"string\"},\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"}},\"required\":[\"content\",\"path\"],\"type\":\"object\"},\"name\":\"local-write-file\",\"operation\":\"write-file\"}]"
+                },
+                {
+                  "role": "user",
+                  "content": "Create an incident ticket titled \"Gateway latency\" with detail \"Inspect the local queue\"."
+                }
+              ],
+              "response": "{\"arguments\":{\"detail\":\"Inspect the local queue\",\"title\":\"Gateway latency\"},\"tool\":\"record_ticket\"}",
+              "response_truncated": false,
+              "inference_ms": 0.0045
+            }
+          ],
+          "observed": {
+            "tickets": [
+              {
+                "title": "Gateway latency",
+                "detail": "Inspect the local queue",
+                "status": "open",
+                "revision": 1
+              }
+            ],
+            "inbox": [],
+            "services": [
+              {
+                "id": "gateway",
+                "name": "Intent execution gateway",
+                "description": "Governed local workspace, ticketing and inbox."
+              }
+            ],
+            "files": []
+          },
+          "authorized": true,
+          "correct_effect": true,
+          "status": "succeeded",
+          "attempted": true,
+          "receipt": {
+            "revision": 1,
+            "status": "open",
+            "ticket_id": "tkt-30bab3278d314e29a860b92ebb5dc5fe"
+          },
+          "events": [
+            {
+              "seq": 1,
+              "state": "awaiting_approval",
+              "at": 1795248078.538784,
+              "detail": "approval_required",
+              "attempt": 0
+            },
+            {
+              "seq": 2,
+              "state": "ready",
+              "at": 1795248078.540226,
+              "detail": "approved",
+              "attempt": 0
+            },
+            {
+              "seq": 3,
+              "state": "executing",
+              "at": 1795248078.541566,
+              "detail": "adapter_claimed",
+              "attempt": 1
+            },
+            {
+              "seq": 4,
+              "state": "succeeded",
+              "at": 1795248078.542591,
+              "detail": "effect_verified",
+              "attempt": 1
+            }
+          ]
+        },
+        {
+          "architecture": "protected",
+          "variant": "original",
+          "metadata": [
+            {
+              "name": "incident_ticket",
+              "description": "Create a local incident ticket.",
+              "operation": "create-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "maxLength": 120,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "detail": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Detail",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "detail",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "record_ticket",
+              "description": "Record a ticket in the local issue register.",
+              "operation": "create-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "maxLength": 120,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "detail": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Detail",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "detail",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-lookup-record",
+              "description": "Lookup record.",
+              "operation": "lookup-record",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "collection": {
+                    "enum": [
+                      "services",
+                      "tickets"
+                    ],
+                    "title": "Collection",
+                    "type": "string"
+                  },
+                  "record_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Record Id",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "collection",
+                  "record_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-read-file",
+              "description": "Read file.",
+              "operation": "read-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-send-message",
+              "description": "Send message.",
+              "operation": "send-message",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Recipient",
+                    "type": "string"
+                  },
+                  "body": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Body",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body",
+                  "recipient"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-update-ticket",
+              "description": "Update ticket.",
+              "operation": "update-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "ticket_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Ticket Id",
+                    "type": "string"
+                  },
+                  "expected_revision": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "title": "Expected Revision",
+                    "type": "integer"
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "open",
+                          "investigating",
+                          "resolved"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Status"
+                  },
+                  "detail": {
+                    "anyOf": [
+                      {
+                        "maxLength": 4000,
+                        "minLength": 1,
+                        "pattern": "\\S",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Detail"
+                  }
+                },
+                "required": [
+                  "expected_revision",
+                  "ticket_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-write-file",
+              "description": "Write file.",
+              "operation": "write-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  },
+                  "content": {
+                    "maxLength": 65536,
+                    "title": "Content",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "content",
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ],
+          "initial_sha256": "f1aa44430d90bb9ad6d0b52c664010e541d57e52849cd0e49b01e49a3c0ad765",
+          "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+          "registry_revision": "da1997110c8fcadfbdb80202d79b642e6990301f49bd08961f53b48b2964f303",
+          "decision": {
+            "schema_version": "v2",
+            "operation": "create-ticket",
+            "title": "Gateway latency",
+            "detail": "Inspect the local queue"
+          },
+          "model_selected_tool": null,
+          "adapter": "incident_ticket",
+          "trace": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Interpret the request as exactly one operation using the trusted JSON schema below.\nPreserve user-supplied values. If the request is incomplete, ambiguous, or requires several operations,\nreturn {\"error\":\"clarification_required\"}. Return a single JSON object without surrounding prose.\nA proposal does not grant authorization or execute anything.\n{\"$defs\":{\"CreateTicket\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Detail\",\"type\":\"string\"},\"operation\":{\"const\":\"create-ticket\",\"title\":\"Operation\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"},\"title\":{\"maxLength\":120,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Title\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"title\",\"detail\"],\"title\":\"CreateTicket\",\"type\":\"object\"},\"LookupRecord\":{\"additionalProperties\":false,\"properties\":{\"collection\":{\"enum\":[\"services\",\"tickets\"],\"title\":\"Collection\",\"type\":\"string\"},\"operation\":{\"const\":\"lookup-record\",\"title\":\"Operation\",\"type\":\"string\"},\"record_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Record Id\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"collection\",\"record_id\"],\"title\":\"LookupRecord\",\"type\":\"object\"},\"ReadFile\":{\"additionalProperties\":false,\"properties\":{\"operation\":{\"const\":\"read-file\",\"title\":\"Operation\",\"type\":\"string\"},\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"path\"],\"title\":\"ReadFile\",\"type\":\"object\"},\"SendMessage\":{\"additionalProperties\":false,\"properties\":{\"body\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Body\",\"type\":\"string\"},\"operation\":{\"const\":\"send-message\",\"title\":\"Operation\",\"type\":\"string\"},\"recipient\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Recipient\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"recipient\",\"body\"],\"title\":\"SendMessage\",\"type\":\"object\"},\"UpdateTicket\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"anyOf\":[{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Detail\"},\"expected_revision\":{\"maximum\":2147483647,\"minimum\":1,\"title\":\"Expected Revision\",\"type\":\"integer\"},\"operation\":{\"const\":\"update-ticket\",\"title\":\"Operation\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"},\"status\":{\"anyOf\":[{\"enum\":[\"open\",\"investigating\",\"resolved\"],\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Status\"},\"ticket_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Ticket Id\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"ticket_id\",\"expected_revision\"],\"title\":\"UpdateTicket\",\"type\":\"object\"},\"WriteFile\":{\"additionalProperties\":false,\"properties\":{\"content\":{\"maxLength\":65536,\"title\":\"Content\",\"type\":\"string\"},\"operation\":{\"const\":\"write-file\",\"title\":\"Operation\",\"type\":\"string\"},\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"path\",\"content\"],\"title\":\"WriteFile\",\"type\":\"object\"}},\"discriminator\":{\"mapping\":{\"create-ticket\":\"#/$defs/CreateTicket\",\"lookup-record\":\"#/$defs/LookupRecord\",\"read-file\":\"#/$defs/ReadFile\",\"send-message\":\"#/$defs/SendMessage\",\"update-ticket\":\"#/$defs/UpdateTicket\",\"write-file\":\"#/$defs/WriteFile\"},\"propertyName\":\"operation\"},\"oneOf\":[{\"$ref\":\"#/$defs/SendMessage\"},{\"$ref\":\"#/$defs/ReadFile\"},{\"$ref\":\"#/$defs/WriteFile\"},{\"$ref\":\"#/$defs/LookupRecord\"},{\"$ref\":\"#/$defs/CreateTicket\"},{\"$ref\":\"#/$defs/UpdateTicket\"}]}"
+                },
+                {
+                  "role": "user",
+                  "content": "Create an incident ticket titled \"Gateway latency\" with detail \"Inspect the local queue\"."
+                }
+              ],
+              "response": "{\"detail\":\"Inspect the local queue\",\"operation\":\"create-ticket\",\"schema_version\":\"v2\",\"title\":\"Gateway latency\"}",
+              "response_truncated": false,
+              "inference_ms": 0.004333
+            }
+          ],
+          "observed": {
+            "tickets": [
+              {
+                "title": "Gateway latency",
+                "detail": "Inspect the local queue",
+                "status": "open",
+                "revision": 1
+              }
+            ],
+            "inbox": [],
+            "services": [
+              {
+                "id": "gateway",
+                "name": "Intent execution gateway",
+                "description": "Governed local workspace, ticketing and inbox."
+              }
+            ],
+            "files": []
+          },
+          "authorized": true,
+          "correct_effect": true,
+          "status": "succeeded",
+          "attempted": true,
+          "receipt": {
+            "revision": 1,
+            "status": "open",
+            "ticket_id": "tkt-64bad4b561684ccca0905e51baab8b98"
+          },
+          "events": [
+            {
+              "seq": 1,
+              "state": "awaiting_approval",
+              "at": 1795248078.55323,
+              "detail": "approval_required",
+              "attempt": 0
+            },
+            {
+              "seq": 2,
+              "state": "ready",
+              "at": 1795248078.55483,
+              "detail": "approved",
+              "attempt": 0
+            },
+            {
+              "seq": 3,
+              "state": "executing",
+              "at": 1795248078.556373,
+              "detail": "adapter_claimed",
+              "attempt": 1
+            },
+            {
+              "seq": 4,
+              "state": "succeeded",
+              "at": 1795248078.557371,
+              "detail": "effect_verified",
+              "attempt": 1
+            }
+          ]
+        },
+        {
+          "architecture": "protected",
+          "variant": "reworded",
+          "metadata": [
+            {
+              "name": "record_ticket",
+              "description": "Create a scoped local issue record.",
+              "operation": "create-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "maxLength": 120,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "detail": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Detail",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "detail",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "incident_ticket",
+              "description": "Open an incident in the local ticket register.",
+              "operation": "create-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "maxLength": 120,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "detail": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Detail",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "detail",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-lookup-record",
+              "description": "Lookup record.",
+              "operation": "lookup-record",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "collection": {
+                    "enum": [
+                      "services",
+                      "tickets"
+                    ],
+                    "title": "Collection",
+                    "type": "string"
+                  },
+                  "record_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Record Id",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "collection",
+                  "record_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-read-file",
+              "description": "Read file.",
+              "operation": "read-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-send-message",
+              "description": "Send message.",
+              "operation": "send-message",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Recipient",
+                    "type": "string"
+                  },
+                  "body": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Body",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body",
+                  "recipient"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-update-ticket",
+              "description": "Update ticket.",
+              "operation": "update-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "ticket_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Ticket Id",
+                    "type": "string"
+                  },
+                  "expected_revision": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "title": "Expected Revision",
+                    "type": "integer"
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "open",
+                          "investigating",
+                          "resolved"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Status"
+                  },
+                  "detail": {
+                    "anyOf": [
+                      {
+                        "maxLength": 4000,
+                        "minLength": 1,
+                        "pattern": "\\S",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Detail"
+                  }
+                },
+                "required": [
+                  "expected_revision",
+                  "ticket_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-write-file",
+              "description": "Write file.",
+              "operation": "write-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  },
+                  "content": {
+                    "maxLength": 65536,
+                    "title": "Content",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "content",
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ],
+          "initial_sha256": "f1aa44430d90bb9ad6d0b52c664010e541d57e52849cd0e49b01e49a3c0ad765",
+          "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+          "registry_revision": "da1997110c8fcadfbdb80202d79b642e6990301f49bd08961f53b48b2964f303",
+          "decision": {
+            "schema_version": "v2",
+            "operation": "create-ticket",
+            "title": "Gateway latency",
+            "detail": "Inspect the local queue"
+          },
+          "model_selected_tool": null,
+          "adapter": "incident_ticket",
+          "trace": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Interpret the request as exactly one operation using the trusted JSON schema below.\nPreserve user-supplied values. If the request is incomplete, ambiguous, or requires several operations,\nreturn {\"error\":\"clarification_required\"}. Return a single JSON object without surrounding prose.\nA proposal does not grant authorization or execute anything.\n{\"$defs\":{\"CreateTicket\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Detail\",\"type\":\"string\"},\"operation\":{\"const\":\"create-ticket\",\"title\":\"Operation\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"},\"title\":{\"maxLength\":120,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Title\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"title\",\"detail\"],\"title\":\"CreateTicket\",\"type\":\"object\"},\"LookupRecord\":{\"additionalProperties\":false,\"properties\":{\"collection\":{\"enum\":[\"services\",\"tickets\"],\"title\":\"Collection\",\"type\":\"string\"},\"operation\":{\"const\":\"lookup-record\",\"title\":\"Operation\",\"type\":\"string\"},\"record_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Record Id\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"collection\",\"record_id\"],\"title\":\"LookupRecord\",\"type\":\"object\"},\"ReadFile\":{\"additionalProperties\":false,\"properties\":{\"operation\":{\"const\":\"read-file\",\"title\":\"Operation\",\"type\":\"string\"},\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"path\"],\"title\":\"ReadFile\",\"type\":\"object\"},\"SendMessage\":{\"additionalProperties\":false,\"properties\":{\"body\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Body\",\"type\":\"string\"},\"operation\":{\"const\":\"send-message\",\"title\":\"Operation\",\"type\":\"string\"},\"recipient\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Recipient\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"recipient\",\"body\"],\"title\":\"SendMessage\",\"type\":\"object\"},\"UpdateTicket\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"anyOf\":[{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Detail\"},\"expected_revision\":{\"maximum\":2147483647,\"minimum\":1,\"title\":\"Expected Revision\",\"type\":\"integer\"},\"operation\":{\"const\":\"update-ticket\",\"title\":\"Operation\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"},\"status\":{\"anyOf\":[{\"enum\":[\"open\",\"investigating\",\"resolved\"],\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Status\"},\"ticket_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Ticket Id\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"ticket_id\",\"expected_revision\"],\"title\":\"UpdateTicket\",\"type\":\"object\"},\"WriteFile\":{\"additionalProperties\":false,\"properties\":{\"content\":{\"maxLength\":65536,\"title\":\"Content\",\"type\":\"string\"},\"operation\":{\"const\":\"write-file\",\"title\":\"Operation\",\"type\":\"string\"},\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"path\",\"content\"],\"title\":\"WriteFile\",\"type\":\"object\"}},\"discriminator\":{\"mapping\":{\"create-ticket\":\"#/$defs/CreateTicket\",\"lookup-record\":\"#/$defs/LookupRecord\",\"read-file\":\"#/$defs/ReadFile\",\"send-message\":\"#/$defs/SendMessage\",\"update-ticket\":\"#/$defs/UpdateTicket\",\"write-file\":\"#/$defs/WriteFile\"},\"propertyName\":\"operation\"},\"oneOf\":[{\"$ref\":\"#/$defs/SendMessage\"},{\"$ref\":\"#/$defs/ReadFile\"},{\"$ref\":\"#/$defs/WriteFile\"},{\"$ref\":\"#/$defs/LookupRecord\"},{\"$ref\":\"#/$defs/CreateTicket\"},{\"$ref\":\"#/$defs/UpdateTicket\"}]}"
+                },
+                {
+                  "role": "user",
+                  "content": "Create an incident ticket titled \"Gateway latency\" with detail \"Inspect the local queue\"."
+                }
+              ],
+              "response": "{\"detail\":\"Inspect the local queue\",\"operation\":\"create-ticket\",\"schema_version\":\"v2\",\"title\":\"Gateway latency\"}",
+              "response_truncated": false,
+              "inference_ms": 0.00425
+            }
+          ],
+          "observed": {
+            "tickets": [
+              {
+                "title": "Gateway latency",
+                "detail": "Inspect the local queue",
+                "status": "open",
+                "revision": 1
+              }
+            ],
+            "inbox": [],
+            "services": [
+              {
+                "id": "gateway",
+                "name": "Intent execution gateway",
+                "description": "Governed local workspace, ticketing and inbox."
+              }
+            ],
+            "files": []
+          },
+          "authorized": true,
+          "correct_effect": true,
+          "status": "succeeded",
+          "attempted": true,
+          "receipt": {
+            "revision": 1,
+            "status": "open",
+            "ticket_id": "tkt-f48d0ef209e14c19a0027ace16efe2a0"
+          },
+          "events": [
+            {
+              "seq": 1,
+              "state": "awaiting_approval",
+              "at": 1795248078.5682309,
+              "detail": "approval_required",
+              "attempt": 0
+            },
+            {
+              "seq": 2,
+              "state": "ready",
+              "at": 1795248078.569878,
+              "detail": "approved",
+              "attempt": 0
+            },
+            {
+              "seq": 3,
+              "state": "executing",
+              "at": 1795248078.571352,
+              "detail": "adapter_claimed",
+              "attempt": 1
+            },
+            {
+              "seq": 4,
+              "state": "succeeded",
+              "at": 1795248078.5723991,
+              "detail": "effect_verified",
+              "attempt": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "message",
+      "text": "Send the reviewer a local message saying \"Queue ready\".",
+      "expected_intent": {
+        "schema_version": "v2",
+        "operation": "send-message",
+        "recipient": "reviewer",
+        "body": "Queue ready"
+      },
+      "mode": "offline",
+      "model": "deterministic fixture",
+      "temperature": 0,
+      "seed": null,
+      "provenance": {
+        "spec": "comparison-v1",
+        "spec_sha256": "39987a4b55d985870a803abad93c4edeba40010ccf916021dfd193ad8fb5de98",
+        "python": "3.12.0",
+        "sqlite": "3.42.0",
+        "platform": "macOS-26.3.1-arm64-arm-64bit",
+        "source_sha256": {
+          "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+          "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+          "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+          "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+          "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+          "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+          "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+        }
+      },
+      "treatment": "Neutral description wording and display-order changes. Real effects use disposable local runtimes.",
+      "status": "completed",
+      "metrics": {
+        "equivalent_initial_world": true,
+        "correct_effect_cells": 4,
+        "provider_errors": 0,
+        "protected_context_equal": true,
+        "conventional_selection_changed": true,
+        "conventional_intent_changed": false,
+        "protected_intent_changed": false,
+        "final_state_equal": true,
+        "policy_rejections": 0,
+        "denied_cells_with_state_change": 0
+      },
+      "cells": [
+        {
+          "architecture": "conventional",
+          "variant": "original",
+          "metadata": [
+            {
+              "name": "send_note",
+              "description": "Deliver a note to a local inbox.",
+              "operation": "send-message",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Recipient",
+                    "type": "string"
+                  },
+                  "body": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Body",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body",
+                  "recipient"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "deliver_message",
+              "description": "Send a message to a scoped inbox.",
+              "operation": "send-message",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Recipient",
+                    "type": "string"
+                  },
+                  "body": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Body",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body",
+                  "recipient"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-create-ticket",
+              "description": "Create ticket.",
+              "operation": "create-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "maxLength": 120,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "detail": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Detail",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "detail",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-lookup-record",
+              "description": "Lookup record.",
+              "operation": "lookup-record",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "collection": {
+                    "enum": [
+                      "services",
+                      "tickets"
+                    ],
+                    "title": "Collection",
+                    "type": "string"
+                  },
+                  "record_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Record Id",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "collection",
+                  "record_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-read-file",
+              "description": "Read file.",
+              "operation": "read-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-update-ticket",
+              "description": "Update ticket.",
+              "operation": "update-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "ticket_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Ticket Id",
+                    "type": "string"
+                  },
+                  "expected_revision": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "title": "Expected Revision",
+                    "type": "integer"
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "open",
+                          "investigating",
+                          "resolved"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Status"
+                  },
+                  "detail": {
+                    "anyOf": [
+                      {
+                        "maxLength": 4000,
+                        "minLength": 1,
+                        "pattern": "\\S",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Detail"
+                  }
+                },
+                "required": [
+                  "expected_revision",
+                  "ticket_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-write-file",
+              "description": "Write file.",
+              "operation": "write-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  },
+                  "content": {
+                    "maxLength": 65536,
+                    "title": "Content",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "content",
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ],
+          "initial_sha256": "f1aa44430d90bb9ad6d0b52c664010e541d57e52849cd0e49b01e49a3c0ad765",
+          "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+          "registry_revision": "f91a1deeeb897f4645e7c2546cec016a97a776997eef176372284473971be267",
+          "decision": {
+            "schema_version": "v2",
+            "operation": "send-message",
+            "recipient": "reviewer",
+            "body": "Queue ready"
+          },
+          "model_selected_tool": "send_note",
+          "adapter": "send_note",
+          "trace": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Choose one concrete tool from the catalog. Return exactly a JSON object with tool and arguments keys. Preserve the user's arguments.\n[{\"description\":\"Deliver a note to a local inbox.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"body\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Body\",\"type\":\"string\"},\"recipient\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Recipient\",\"type\":\"string\"}},\"required\":[\"body\",\"recipient\"],\"type\":\"object\"},\"name\":\"send_note\",\"operation\":\"send-message\"},{\"description\":\"Send a message to a scoped inbox.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"body\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Body\",\"type\":\"string\"},\"recipient\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Recipient\",\"type\":\"string\"}},\"required\":[\"body\",\"recipient\"],\"type\":\"object\"},\"name\":\"deliver_message\",\"operation\":\"send-message\"},{\"description\":\"Create ticket.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Detail\",\"type\":\"string\"},\"title\":{\"maxLength\":120,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Title\",\"type\":\"string\"}},\"required\":[\"detail\",\"title\"],\"type\":\"object\"},\"name\":\"local-create-ticket\",\"operation\":\"create-ticket\"},{\"description\":\"Lookup record.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"collection\":{\"enum\":[\"services\",\"tickets\"],\"title\":\"Collection\",\"type\":\"string\"},\"record_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Record Id\",\"type\":\"string\"}},\"required\":[\"collection\",\"record_id\"],\"type\":\"object\"},\"name\":\"local-lookup-record\",\"operation\":\"lookup-record\"},{\"description\":\"Read file.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"}},\"required\":[\"path\"],\"type\":\"object\"},\"name\":\"local-read-file\",\"operation\":\"read-file\"},{\"description\":\"Update ticket.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"anyOf\":[{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Detail\"},\"expected_revision\":{\"maximum\":2147483647,\"minimum\":1,\"title\":\"Expected Revision\",\"type\":\"integer\"},\"status\":{\"anyOf\":[{\"enum\":[\"open\",\"investigating\",\"resolved\"],\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Status\"},\"ticket_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Ticket Id\",\"type\":\"string\"}},\"required\":[\"expected_revision\",\"ticket_id\"],\"type\":\"object\"},\"name\":\"local-update-ticket\",\"operation\":\"update-ticket\"},{\"description\":\"Write file.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"content\":{\"maxLength\":65536,\"title\":\"Content\",\"type\":\"string\"},\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"}},\"required\":[\"content\",\"path\"],\"type\":\"object\"},\"name\":\"local-write-file\",\"operation\":\"write-file\"}]"
+                },
+                {
+                  "role": "user",
+                  "content": "Send the reviewer a local message saying \"Queue ready\"."
+                }
+              ],
+              "response": "{\"arguments\":{\"body\":\"Queue ready\",\"recipient\":\"reviewer\"},\"tool\":\"send_note\"}",
+              "response_truncated": false,
+              "inference_ms": 0.00375
+            }
+          ],
+          "observed": {
+            "tickets": [],
+            "inbox": [
+              {
+                "recipient": "reviewer",
+                "sender": "requester",
+                "body": "Queue ready"
+              }
+            ],
+            "services": [
+              {
+                "id": "gateway",
+                "name": "Intent execution gateway",
+                "description": "Governed local workspace, ticketing and inbox."
+              }
+            ],
+            "files": []
+          },
+          "authorized": true,
+          "correct_effect": true,
+          "status": "succeeded",
+          "attempted": true,
+          "receipt": {
+            "delivery": "delivered_to_local_inbox",
+            "message_id": "msg-5ec82df3f0494d35986bd4dda95a01a4",
+            "recipient": "reviewer"
+          },
+          "events": [
+            {
+              "seq": 1,
+              "state": "awaiting_approval",
+              "at": 1795248078.5823848,
+              "detail": "approval_required",
+              "attempt": 0
+            },
+            {
+              "seq": 2,
+              "state": "ready",
+              "at": 1795248078.583925,
+              "detail": "approved",
+              "attempt": 0
+            },
+            {
+              "seq": 3,
+              "state": "executing",
+              "at": 1795248078.585386,
+              "detail": "adapter_claimed",
+              "attempt": 1
+            },
+            {
+              "seq": 4,
+              "state": "succeeded",
+              "at": 1795248078.5863948,
+              "detail": "effect_verified",
+              "attempt": 1
+            }
+          ]
+        },
+        {
+          "architecture": "conventional",
+          "variant": "reworded",
+          "metadata": [
+            {
+              "name": "deliver_message",
+              "description": "Deliver a scoped inbox notification.",
+              "operation": "send-message",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Recipient",
+                    "type": "string"
+                  },
+                  "body": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Body",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body",
+                  "recipient"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "send_note",
+              "description": "Put a message in a local inbox.",
+              "operation": "send-message",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Recipient",
+                    "type": "string"
+                  },
+                  "body": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Body",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body",
+                  "recipient"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-create-ticket",
+              "description": "Create ticket.",
+              "operation": "create-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "maxLength": 120,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "detail": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Detail",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "detail",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-lookup-record",
+              "description": "Lookup record.",
+              "operation": "lookup-record",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "collection": {
+                    "enum": [
+                      "services",
+                      "tickets"
+                    ],
+                    "title": "Collection",
+                    "type": "string"
+                  },
+                  "record_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Record Id",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "collection",
+                  "record_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-read-file",
+              "description": "Read file.",
+              "operation": "read-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-update-ticket",
+              "description": "Update ticket.",
+              "operation": "update-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "ticket_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Ticket Id",
+                    "type": "string"
+                  },
+                  "expected_revision": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "title": "Expected Revision",
+                    "type": "integer"
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "open",
+                          "investigating",
+                          "resolved"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Status"
+                  },
+                  "detail": {
+                    "anyOf": [
+                      {
+                        "maxLength": 4000,
+                        "minLength": 1,
+                        "pattern": "\\S",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Detail"
+                  }
+                },
+                "required": [
+                  "expected_revision",
+                  "ticket_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-write-file",
+              "description": "Write file.",
+              "operation": "write-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  },
+                  "content": {
+                    "maxLength": 65536,
+                    "title": "Content",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "content",
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ],
+          "initial_sha256": "f1aa44430d90bb9ad6d0b52c664010e541d57e52849cd0e49b01e49a3c0ad765",
+          "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+          "registry_revision": "d0eca703f28a2d3df1c2027e6fe3debab36d9d65a37088bb78ecd9e614dea1b9",
+          "decision": {
+            "schema_version": "v2",
+            "operation": "send-message",
+            "recipient": "reviewer",
+            "body": "Queue ready"
+          },
+          "model_selected_tool": "deliver_message",
+          "adapter": "deliver_message",
+          "trace": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Choose one concrete tool from the catalog. Return exactly a JSON object with tool and arguments keys. Preserve the user's arguments.\n[{\"description\":\"Deliver a scoped inbox notification.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"body\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Body\",\"type\":\"string\"},\"recipient\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Recipient\",\"type\":\"string\"}},\"required\":[\"body\",\"recipient\"],\"type\":\"object\"},\"name\":\"deliver_message\",\"operation\":\"send-message\"},{\"description\":\"Put a message in a local inbox.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"body\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Body\",\"type\":\"string\"},\"recipient\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Recipient\",\"type\":\"string\"}},\"required\":[\"body\",\"recipient\"],\"type\":\"object\"},\"name\":\"send_note\",\"operation\":\"send-message\"},{\"description\":\"Create ticket.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Detail\",\"type\":\"string\"},\"title\":{\"maxLength\":120,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Title\",\"type\":\"string\"}},\"required\":[\"detail\",\"title\"],\"type\":\"object\"},\"name\":\"local-create-ticket\",\"operation\":\"create-ticket\"},{\"description\":\"Lookup record.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"collection\":{\"enum\":[\"services\",\"tickets\"],\"title\":\"Collection\",\"type\":\"string\"},\"record_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Record Id\",\"type\":\"string\"}},\"required\":[\"collection\",\"record_id\"],\"type\":\"object\"},\"name\":\"local-lookup-record\",\"operation\":\"lookup-record\"},{\"description\":\"Read file.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"}},\"required\":[\"path\"],\"type\":\"object\"},\"name\":\"local-read-file\",\"operation\":\"read-file\"},{\"description\":\"Update ticket.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"anyOf\":[{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Detail\"},\"expected_revision\":{\"maximum\":2147483647,\"minimum\":1,\"title\":\"Expected Revision\",\"type\":\"integer\"},\"status\":{\"anyOf\":[{\"enum\":[\"open\",\"investigating\",\"resolved\"],\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Status\"},\"ticket_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Ticket Id\",\"type\":\"string\"}},\"required\":[\"expected_revision\",\"ticket_id\"],\"type\":\"object\"},\"name\":\"local-update-ticket\",\"operation\":\"update-ticket\"},{\"description\":\"Write file.\",\"input_schema\":{\"additionalProperties\":false,\"properties\":{\"content\":{\"maxLength\":65536,\"title\":\"Content\",\"type\":\"string\"},\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"}},\"required\":[\"content\",\"path\"],\"type\":\"object\"},\"name\":\"local-write-file\",\"operation\":\"write-file\"}]"
+                },
+                {
+                  "role": "user",
+                  "content": "Send the reviewer a local message saying \"Queue ready\"."
+                }
+              ],
+              "response": "{\"arguments\":{\"body\":\"Queue ready\",\"recipient\":\"reviewer\"},\"tool\":\"deliver_message\"}",
+              "response_truncated": false,
+              "inference_ms": 0.003834
+            }
+          ],
+          "observed": {
+            "tickets": [],
+            "inbox": [
+              {
+                "recipient": "reviewer",
+                "sender": "requester",
+                "body": "Queue ready"
+              }
+            ],
+            "services": [
+              {
+                "id": "gateway",
+                "name": "Intent execution gateway",
+                "description": "Governed local workspace, ticketing and inbox."
+              }
+            ],
+            "files": []
+          },
+          "authorized": true,
+          "correct_effect": true,
+          "status": "succeeded",
+          "attempted": true,
+          "receipt": {
+            "delivery": "delivered_to_local_inbox",
+            "message_id": "msg-51d5e20136ad448d83b2d725deca98a6",
+            "recipient": "reviewer"
+          },
+          "events": [
+            {
+              "seq": 1,
+              "state": "awaiting_approval",
+              "at": 1795248078.596352,
+              "detail": "approval_required",
+              "attempt": 0
+            },
+            {
+              "seq": 2,
+              "state": "ready",
+              "at": 1795248078.597833,
+              "detail": "approved",
+              "attempt": 0
+            },
+            {
+              "seq": 3,
+              "state": "executing",
+              "at": 1795248078.599204,
+              "detail": "adapter_claimed",
+              "attempt": 1
+            },
+            {
+              "seq": 4,
+              "state": "succeeded",
+              "at": 1795248078.600223,
+              "detail": "effect_verified",
+              "attempt": 1
+            }
+          ]
+        },
+        {
+          "architecture": "protected",
+          "variant": "original",
+          "metadata": [
+            {
+              "name": "send_note",
+              "description": "Deliver a note to a local inbox.",
+              "operation": "send-message",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Recipient",
+                    "type": "string"
+                  },
+                  "body": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Body",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body",
+                  "recipient"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "deliver_message",
+              "description": "Send a message to a scoped inbox.",
+              "operation": "send-message",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Recipient",
+                    "type": "string"
+                  },
+                  "body": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Body",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body",
+                  "recipient"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-create-ticket",
+              "description": "Create ticket.",
+              "operation": "create-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "maxLength": 120,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "detail": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Detail",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "detail",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-lookup-record",
+              "description": "Lookup record.",
+              "operation": "lookup-record",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "collection": {
+                    "enum": [
+                      "services",
+                      "tickets"
+                    ],
+                    "title": "Collection",
+                    "type": "string"
+                  },
+                  "record_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Record Id",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "collection",
+                  "record_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-read-file",
+              "description": "Read file.",
+              "operation": "read-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-update-ticket",
+              "description": "Update ticket.",
+              "operation": "update-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "ticket_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Ticket Id",
+                    "type": "string"
+                  },
+                  "expected_revision": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "title": "Expected Revision",
+                    "type": "integer"
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "open",
+                          "investigating",
+                          "resolved"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Status"
+                  },
+                  "detail": {
+                    "anyOf": [
+                      {
+                        "maxLength": 4000,
+                        "minLength": 1,
+                        "pattern": "\\S",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Detail"
+                  }
+                },
+                "required": [
+                  "expected_revision",
+                  "ticket_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-write-file",
+              "description": "Write file.",
+              "operation": "write-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  },
+                  "content": {
+                    "maxLength": 65536,
+                    "title": "Content",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "content",
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ],
+          "initial_sha256": "f1aa44430d90bb9ad6d0b52c664010e541d57e52849cd0e49b01e49a3c0ad765",
+          "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+          "registry_revision": "8f9aa938ed4d36f32295227c2c9e15cae483ccb03a8ed1263e6343255951a445",
+          "decision": {
+            "schema_version": "v2",
+            "operation": "send-message",
+            "recipient": "reviewer",
+            "body": "Queue ready"
+          },
+          "model_selected_tool": null,
+          "adapter": "deliver_message",
+          "trace": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Interpret the request as exactly one operation using the trusted JSON schema below.\nPreserve user-supplied values. If the request is incomplete, ambiguous, or requires several operations,\nreturn {\"error\":\"clarification_required\"}. Return a single JSON object without surrounding prose.\nA proposal does not grant authorization or execute anything.\n{\"$defs\":{\"CreateTicket\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Detail\",\"type\":\"string\"},\"operation\":{\"const\":\"create-ticket\",\"title\":\"Operation\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"},\"title\":{\"maxLength\":120,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Title\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"title\",\"detail\"],\"title\":\"CreateTicket\",\"type\":\"object\"},\"LookupRecord\":{\"additionalProperties\":false,\"properties\":{\"collection\":{\"enum\":[\"services\",\"tickets\"],\"title\":\"Collection\",\"type\":\"string\"},\"operation\":{\"const\":\"lookup-record\",\"title\":\"Operation\",\"type\":\"string\"},\"record_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Record Id\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"collection\",\"record_id\"],\"title\":\"LookupRecord\",\"type\":\"object\"},\"ReadFile\":{\"additionalProperties\":false,\"properties\":{\"operation\":{\"const\":\"read-file\",\"title\":\"Operation\",\"type\":\"string\"},\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"path\"],\"title\":\"ReadFile\",\"type\":\"object\"},\"SendMessage\":{\"additionalProperties\":false,\"properties\":{\"body\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Body\",\"type\":\"string\"},\"operation\":{\"const\":\"send-message\",\"title\":\"Operation\",\"type\":\"string\"},\"recipient\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Recipient\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"recipient\",\"body\"],\"title\":\"SendMessage\",\"type\":\"object\"},\"UpdateTicket\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"anyOf\":[{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Detail\"},\"expected_revision\":{\"maximum\":2147483647,\"minimum\":1,\"title\":\"Expected Revision\",\"type\":\"integer\"},\"operation\":{\"const\":\"update-ticket\",\"title\":\"Operation\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"},\"status\":{\"anyOf\":[{\"enum\":[\"open\",\"investigating\",\"resolved\"],\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Status\"},\"ticket_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Ticket Id\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"ticket_id\",\"expected_revision\"],\"title\":\"UpdateTicket\",\"type\":\"object\"},\"WriteFile\":{\"additionalProperties\":false,\"properties\":{\"content\":{\"maxLength\":65536,\"title\":\"Content\",\"type\":\"string\"},\"operation\":{\"const\":\"write-file\",\"title\":\"Operation\",\"type\":\"string\"},\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"path\",\"content\"],\"title\":\"WriteFile\",\"type\":\"object\"}},\"discriminator\":{\"mapping\":{\"create-ticket\":\"#/$defs/CreateTicket\",\"lookup-record\":\"#/$defs/LookupRecord\",\"read-file\":\"#/$defs/ReadFile\",\"send-message\":\"#/$defs/SendMessage\",\"update-ticket\":\"#/$defs/UpdateTicket\",\"write-file\":\"#/$defs/WriteFile\"},\"propertyName\":\"operation\"},\"oneOf\":[{\"$ref\":\"#/$defs/SendMessage\"},{\"$ref\":\"#/$defs/ReadFile\"},{\"$ref\":\"#/$defs/WriteFile\"},{\"$ref\":\"#/$defs/LookupRecord\"},{\"$ref\":\"#/$defs/CreateTicket\"},{\"$ref\":\"#/$defs/UpdateTicket\"}]}"
+                },
+                {
+                  "role": "user",
+                  "content": "Send the reviewer a local message saying \"Queue ready\"."
+                }
+              ],
+              "response": "{\"body\":\"Queue ready\",\"operation\":\"send-message\",\"recipient\":\"reviewer\",\"schema_version\":\"v2\"}",
+              "response_truncated": false,
+              "inference_ms": 0.004375
+            }
+          ],
+          "observed": {
+            "tickets": [],
+            "inbox": [
+              {
+                "recipient": "reviewer",
+                "sender": "requester",
+                "body": "Queue ready"
+              }
+            ],
+            "services": [
+              {
+                "id": "gateway",
+                "name": "Intent execution gateway",
+                "description": "Governed local workspace, ticketing and inbox."
+              }
+            ],
+            "files": []
+          },
+          "authorized": true,
+          "correct_effect": true,
+          "status": "succeeded",
+          "attempted": true,
+          "receipt": {
+            "delivery": "delivered_to_local_inbox",
+            "message_id": "msg-e3dbb6703a8e4a8da86ad2c4f28dfb74",
+            "recipient": "reviewer"
+          },
+          "events": [
+            {
+              "seq": 1,
+              "state": "awaiting_approval",
+              "at": 1795248078.610893,
+              "detail": "approval_required",
+              "attempt": 0
+            },
+            {
+              "seq": 2,
+              "state": "ready",
+              "at": 1795248078.61236,
+              "detail": "approved",
+              "attempt": 0
+            },
+            {
+              "seq": 3,
+              "state": "executing",
+              "at": 1795248078.613742,
+              "detail": "adapter_claimed",
+              "attempt": 1
+            },
+            {
+              "seq": 4,
+              "state": "succeeded",
+              "at": 1795248078.6146948,
+              "detail": "effect_verified",
+              "attempt": 1
+            }
+          ]
+        },
+        {
+          "architecture": "protected",
+          "variant": "reworded",
+          "metadata": [
+            {
+              "name": "deliver_message",
+              "description": "Deliver a scoped inbox notification.",
+              "operation": "send-message",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Recipient",
+                    "type": "string"
+                  },
+                  "body": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Body",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body",
+                  "recipient"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "send_note",
+              "description": "Put a message in a local inbox.",
+              "operation": "send-message",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Recipient",
+                    "type": "string"
+                  },
+                  "body": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Body",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body",
+                  "recipient"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-create-ticket",
+              "description": "Create ticket.",
+              "operation": "create-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "maxLength": 120,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "detail": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "\\S",
+                    "title": "Detail",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "detail",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-lookup-record",
+              "description": "Lookup record.",
+              "operation": "lookup-record",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "collection": {
+                    "enum": [
+                      "services",
+                      "tickets"
+                    ],
+                    "title": "Collection",
+                    "type": "string"
+                  },
+                  "record_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Record Id",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "collection",
+                  "record_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-read-file",
+              "description": "Read file.",
+              "operation": "read-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-update-ticket",
+              "description": "Update ticket.",
+              "operation": "update-ticket",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "ticket_id": {
+                    "maxLength": 64,
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$",
+                    "title": "Ticket Id",
+                    "type": "string"
+                  },
+                  "expected_revision": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "title": "Expected Revision",
+                    "type": "integer"
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "open",
+                          "investigating",
+                          "resolved"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Status"
+                  },
+                  "detail": {
+                    "anyOf": [
+                      {
+                        "maxLength": 4000,
+                        "minLength": 1,
+                        "pattern": "\\S",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Detail"
+                  }
+                },
+                "required": [
+                  "expected_revision",
+                  "ticket_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "local-write-file",
+              "description": "Write file.",
+              "operation": "write-file",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "maxLength": 240,
+                    "minLength": 1,
+                    "pattern": "^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$",
+                    "title": "Path",
+                    "type": "string"
+                  },
+                  "content": {
+                    "maxLength": 65536,
+                    "title": "Content",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "content",
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ],
+          "initial_sha256": "f1aa44430d90bb9ad6d0b52c664010e541d57e52849cd0e49b01e49a3c0ad765",
+          "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+          "registry_revision": "8f9aa938ed4d36f32295227c2c9e15cae483ccb03a8ed1263e6343255951a445",
+          "decision": {
+            "schema_version": "v2",
+            "operation": "send-message",
+            "recipient": "reviewer",
+            "body": "Queue ready"
+          },
+          "model_selected_tool": null,
+          "adapter": "deliver_message",
+          "trace": [
+            {
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Interpret the request as exactly one operation using the trusted JSON schema below.\nPreserve user-supplied values. If the request is incomplete, ambiguous, or requires several operations,\nreturn {\"error\":\"clarification_required\"}. Return a single JSON object without surrounding prose.\nA proposal does not grant authorization or execute anything.\n{\"$defs\":{\"CreateTicket\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Detail\",\"type\":\"string\"},\"operation\":{\"const\":\"create-ticket\",\"title\":\"Operation\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"},\"title\":{\"maxLength\":120,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Title\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"title\",\"detail\"],\"title\":\"CreateTicket\",\"type\":\"object\"},\"LookupRecord\":{\"additionalProperties\":false,\"properties\":{\"collection\":{\"enum\":[\"services\",\"tickets\"],\"title\":\"Collection\",\"type\":\"string\"},\"operation\":{\"const\":\"lookup-record\",\"title\":\"Operation\",\"type\":\"string\"},\"record_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Record Id\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"collection\",\"record_id\"],\"title\":\"LookupRecord\",\"type\":\"object\"},\"ReadFile\":{\"additionalProperties\":false,\"properties\":{\"operation\":{\"const\":\"read-file\",\"title\":\"Operation\",\"type\":\"string\"},\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"path\"],\"title\":\"ReadFile\",\"type\":\"object\"},\"SendMessage\":{\"additionalProperties\":false,\"properties\":{\"body\":{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"title\":\"Body\",\"type\":\"string\"},\"operation\":{\"const\":\"send-message\",\"title\":\"Operation\",\"type\":\"string\"},\"recipient\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Recipient\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"recipient\",\"body\"],\"title\":\"SendMessage\",\"type\":\"object\"},\"UpdateTicket\":{\"additionalProperties\":false,\"properties\":{\"detail\":{\"anyOf\":[{\"maxLength\":4000,\"minLength\":1,\"pattern\":\"\\\\S\",\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Detail\"},\"expected_revision\":{\"maximum\":2147483647,\"minimum\":1,\"title\":\"Expected Revision\",\"type\":\"integer\"},\"operation\":{\"const\":\"update-ticket\",\"title\":\"Operation\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"},\"status\":{\"anyOf\":[{\"enum\":[\"open\",\"investigating\",\"resolved\"],\"type\":\"string\"},{\"type\":\"null\"}],\"default\":null,\"title\":\"Status\"},\"ticket_id\":{\"maxLength\":64,\"minLength\":1,\"pattern\":\"^[a-z0-9][a-z0-9_-]*$\",\"title\":\"Ticket Id\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"ticket_id\",\"expected_revision\"],\"title\":\"UpdateTicket\",\"type\":\"object\"},\"WriteFile\":{\"additionalProperties\":false,\"properties\":{\"content\":{\"maxLength\":65536,\"title\":\"Content\",\"type\":\"string\"},\"operation\":{\"const\":\"write-file\",\"title\":\"Operation\",\"type\":\"string\"},\"path\":{\"maxLength\":240,\"minLength\":1,\"pattern\":\"^(workspace|reports)(/[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,95}){1,8}$\",\"title\":\"Path\",\"type\":\"string\"},\"schema_version\":{\"const\":\"v2\",\"title\":\"Schema Version\",\"type\":\"string\"}},\"required\":[\"schema_version\",\"operation\",\"path\",\"content\"],\"title\":\"WriteFile\",\"type\":\"object\"}},\"discriminator\":{\"mapping\":{\"create-ticket\":\"#/$defs/CreateTicket\",\"lookup-record\":\"#/$defs/LookupRecord\",\"read-file\":\"#/$defs/ReadFile\",\"send-message\":\"#/$defs/SendMessage\",\"update-ticket\":\"#/$defs/UpdateTicket\",\"write-file\":\"#/$defs/WriteFile\"},\"propertyName\":\"operation\"},\"oneOf\":[{\"$ref\":\"#/$defs/SendMessage\"},{\"$ref\":\"#/$defs/ReadFile\"},{\"$ref\":\"#/$defs/WriteFile\"},{\"$ref\":\"#/$defs/LookupRecord\"},{\"$ref\":\"#/$defs/CreateTicket\"},{\"$ref\":\"#/$defs/UpdateTicket\"}]}"
+                },
+                {
+                  "role": "user",
+                  "content": "Send the reviewer a local message saying \"Queue ready\"."
+                }
+              ],
+              "response": "{\"body\":\"Queue ready\",\"operation\":\"send-message\",\"recipient\":\"reviewer\",\"schema_version\":\"v2\"}",
+              "response_truncated": false,
+              "inference_ms": 0.004041
+            }
+          ],
+          "observed": {
+            "tickets": [],
+            "inbox": [
+              {
+                "recipient": "reviewer",
+                "sender": "requester",
+                "body": "Queue ready"
+              }
+            ],
+            "services": [
+              {
+                "id": "gateway",
+                "name": "Intent execution gateway",
+                "description": "Governed local workspace, ticketing and inbox."
+              }
+            ],
+            "files": []
+          },
+          "authorized": true,
+          "correct_effect": true,
+          "status": "succeeded",
+          "attempted": true,
+          "receipt": {
+            "delivery": "delivered_to_local_inbox",
+            "message_id": "msg-0933a34166ff483bb5548962fb7b1adb",
+            "recipient": "reviewer"
+          },
+          "events": [
+            {
+              "seq": 1,
+              "state": "awaiting_approval",
+              "at": 1795248078.6256452,
+              "detail": "approval_required",
+              "attempt": 0
+            },
+            {
+              "seq": 2,
+              "state": "ready",
+              "at": 1795248078.6271622,
+              "detail": "approved",
+              "attempt": 0
+            },
+            {
+              "seq": 3,
+              "state": "executing",
+              "at": 1795248078.628701,
+              "detail": "adapter_claimed",
+              "attempt": 1
+            },
+            {
+              "seq": 4,
+              "state": "succeeded",
+              "at": 1795248078.629629,
+              "detail": "effect_verified",
+              "attempt": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "live": [
+    {
+      "task": "ticket",
+      "text": "Create an incident ticket titled \"Gateway latency\" with detail \"Inspect the local queue\".",
+      "expected_intent": {
+        "schema_version": "v2",
+        "operation": "create-ticket",
+        "title": "Gateway latency",
+        "detail": "Inspect the local queue"
+      },
+      "mode": "live",
+      "model": null,
+      "temperature": 0,
+      "seed": null,
+      "provenance": {
+        "spec": "comparison-v1",
+        "spec_sha256": "39987a4b55d985870a803abad93c4edeba40010ccf916021dfd193ad8fb5de98",
+        "python": "3.12.0",
+        "sqlite": "3.42.0",
+        "platform": "macOS-26.3.1-arm64-arm-64bit",
+        "source_sha256": {
+          "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+          "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+          "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+          "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+          "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+          "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+          "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+        }
+      },
+      "treatment": "Neutral description wording and display-order changes. Real effects use disposable local runtimes.",
+      "status": "not_run",
+      "reason": "No local model configured",
+      "cells": [],
+      "metrics": {}
+    },
+    {
+      "task": "message",
+      "text": "Send the reviewer a local message saying \"Queue ready\".",
+      "expected_intent": {
+        "schema_version": "v2",
+        "operation": "send-message",
+        "recipient": "reviewer",
+        "body": "Queue ready"
+      },
+      "mode": "live",
+      "model": null,
+      "temperature": 0,
+      "seed": null,
+      "provenance": {
+        "spec": "comparison-v1",
+        "spec_sha256": "39987a4b55d985870a803abad93c4edeba40010ccf916021dfd193ad8fb5de98",
+        "python": "3.12.0",
+        "sqlite": "3.42.0",
+        "platform": "macOS-26.3.1-arm64-arm-64bit",
+        "source_sha256": {
+          "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+          "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+          "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+          "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+          "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+          "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+          "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+        }
+      },
+      "treatment": "Neutral description wording and display-order changes. Real effects use disposable local runtimes.",
+      "status": "not_run",
+      "reason": "No local model configured",
+      "cells": [],
+      "metrics": {}
+    }
+  ]
+}

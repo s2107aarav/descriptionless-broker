@@ -1,0 +1,11 @@
+{
+  "protocol": "2025-11-25",
+  "official_python_sdk": "1.30.0",
+  "discovered": [
+    "create_incident_ticket",
+    "get_incident_ticket"
+  ],
+  "independent_readback": true,
+  "same_key_replayed": true,
+  "persisted_ticket_count": 1
+}

@@ -9,7 +9,7 @@ from collections.abc import Callable
 from pydantic import ValidationError
 
 from .adapters import SQL_ADAPTERS, Rejected, Uncertain
-from .config import APPROVAL_SECONDS, Principal, same_digest
+from .config import APPROVAL_SECONDS, Principal, Registry, same_digest
 from .contracts import Closed, INTENT, OPERATION_BY_TYPE, READ_OPERATIONS, RECEIPTS, canonical, digest, fingerprint, strict_json
 from .store import ACTIVE_STATES, append_event, select_principal, transition
 
@@ -17,6 +17,7 @@ LOG = logging.getLogger(__name__)
 KEY = re.compile(r"^[A-Za-z0-9_-]{8,128}$")
 MAX_ACTIVE = 128
 MAX_ACTIVE_PER_PRINCIPAL = 32
+MAX_EXECUTIONS = 10_000
 
 
 class GatewayError(Exception):
@@ -56,7 +57,8 @@ def execution_view(row, principal):
     if principal.role == "reviewer":
         view.update(
             requester=row["requester"], request_hash=row["request_hash"], policy_revision=row["policy_revision"],
-            adapter=row["adapter_id"], adapter_version=row["adapter_version"], registry_revision=row["registry_revision"],
+            adapter=row["adapter_id"], planned_adapter=row["planned_adapter_id"], adapter_version=row["adapter_version"],
+            registry_revision=row["registry_revision"] or row["planned_registry_revision"], mapping_revision=row["mapping_revision"],
         )
         if row["status"] == "awaiting_approval":
             view["requested_intent"] = validated_intent(row).model_dump(exclude_none=True)
@@ -65,11 +67,12 @@ def execution_view(row, principal):
 
 class Gateway:
     def __init__(self, store, policy, registry, workspace, *, clock=time.time,
-                 fault: Callable | None = None, observe: Callable | None = None):
+                 fault: Callable | None = None, observe: Callable | None = None, mcp=None):
         self.store = store
         self.policy = policy
         self.policy_revision = policy.revision
         self.registry = registry
+        self.mcp = mcp
         self.workspace = workspace
         self.clock = clock
         self.fault = fault
@@ -84,7 +87,19 @@ class Gateway:
         if self.observe is not None:
             self.observe(name, (time.perf_counter_ns() - started) / 1_000_000)
 
+    def current_registry(self, db):
+        if self.mcp is None:
+            return self.registry
+        return Registry([*self.registry.entries, *self.mcp.entries(db)])
+
     def submit(self, principal, request_key, proposed):
+        if request_key.startswith("wf_"):
+            raise GatewayError(422, "reserved_idempotency_key")
+        with self.store.connect(write=True) as db:
+            row, created = self.submit_in_transaction(db, principal, request_key, proposed)
+        return execution_view(row, principal), created
+
+    def submit_in_transaction(self, db, principal, request_key, proposed):
         if not KEY.fullmatch(request_key):
             raise GatewayError(422, "invalid_idempotency_key")
         if principal.role == "reviewer":
@@ -103,40 +118,44 @@ class Gateway:
             raise GatewayError(422, "invalid_intent") from exc
         self.measured("intent_validation", started)
 
-        with self.store.connect(write=True) as db:
-            check_actor(db, principal)
-            existing = db.execute("SELECT * FROM executions WHERE requester=? AND scope=? AND request_key=?",
-                                  (principal.name, principal.scope, request_key)).fetchone()
-            if existing is not None:
-                if not same_digest(existing["request_hash"], request_hash):
-                    raise GatewayError(409, "idempotency_conflict")
-                return execution_view(existing, principal), False
+        check_actor(db, principal)
+        existing = db.execute("SELECT * FROM executions WHERE requester=? AND scope=? AND request_key=?",
+                              (principal.name, principal.scope, request_key)).fetchone()
+        if existing is not None:
+            if not same_digest(existing["request_hash"], request_hash):
+                raise GatewayError(409, "idempotency_conflict")
+            return existing, False
+        if db.execute("SELECT COUNT(*) FROM executions").fetchone()[0] >= MAX_EXECUTIONS:
+            raise GatewayError(429, "execution_history_full")
 
-            now = self.clock()
-            self.expire_approvals(db, now)
-            started = time.perf_counter_ns()
-            allowed = self.policy.authorize(principal, intent)
-            self.measured("policy_decision", started)
-            requires_approval = intent.operation not in READ_OPERATIONS
-            state = "denied"
-            expiry = None
-            if allowed:
-                self.check_capacity(db, principal.name)
-                state = "awaiting_approval" if requires_approval else "ready"
-                expiry = now + APPROVAL_SECONDS if requires_approval else None
+        now = self.clock()
+        self.expire_approvals(db, now)
+        started = time.perf_counter_ns()
+        allowed = self.policy.authorize(principal, intent)
+        self.measured("policy_decision", started)
+        requires_approval = intent.operation not in READ_OPERATIONS
+        state = "denied"
+        expiry = None
+        if allowed:
+            self.check_capacity(db, principal.name)
+            state = "awaiting_approval" if requires_approval else "ready"
+            expiry = now + APPROVAL_SECONDS if requires_approval else None
 
-            execution_id = uuid.uuid4().hex
-            reason = None if allowed else "policy_denied"
-            db.execute("""INSERT INTO executions (
-                id,requester,scope,request_key,request_hash,operation,schema_version,policy_revision,
-                status,reason,intent_json,approval_expires_at,created_at,updated_at
-                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-                (execution_id, principal.name, principal.scope, request_key, request_hash, intent.operation,
-                 intent.schema_version, self.policy_revision, state, reason,
-                 canonical(arguments) if allowed else None, expiry, now, now))
-            row = get_row(db, execution_id)
-            append_event(db, row, reason or ("approval_required" if requires_approval else "authorized"), principal.name, now=now)
-        return execution_view(row, principal), True
+        registry = self.current_registry(db)
+        selected = registry.resolve(intent.operation)
+        execution_id = uuid.uuid4().hex
+        reason = None if allowed else "policy_denied"
+        db.execute("""INSERT INTO executions (
+            id,requester,scope,request_key,request_hash,operation,schema_version,policy_revision,
+            status,reason,intent_json,approval_expires_at,created_at,updated_at,planned_registry_revision,planned_adapter_id
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (execution_id, principal.name, principal.scope, request_key, request_hash, intent.operation,
+             intent.schema_version, self.policy_revision, state, reason,
+             canonical(arguments) if allowed else None, expiry, now, now, registry.revision,
+             selected.adapter_id if selected else None))
+        row = get_row(db, execution_id)
+        append_event(db, row, reason or ("approval_required" if requires_approval else "authorized"), principal.name, now=now)
+        return row, True
 
     @staticmethod
     def check_capacity(db, requester):
@@ -146,10 +165,17 @@ class Gateway:
             raise GatewayError(429, "execution_queue_full")
 
     def expire_approvals(self, db, now):
+        revision = self.current_registry(db).revision
         rows = db.execute("""SELECT * FROM executions WHERE status='awaiting_approval'
-            AND (approval_expires_at<=? OR policy_revision<>?)""", (now, self.policy_revision)).fetchall()
+            AND (approval_expires_at<=? OR policy_revision<>? OR planned_registry_revision<>?)""",
+                          (now, self.policy_revision, revision)).fetchall()
         for row in rows:
-            reason = "policy_changed" if row["policy_revision"] != self.policy_revision else "approval_expired"
+            if row["policy_revision"] != self.policy_revision:
+                reason = "policy_changed"
+            elif row["planned_registry_revision"] is not None and row["planned_registry_revision"] != revision:
+                reason = "registry_changed"
+            else:
+                reason = "approval_expired"
             transition(db, row, "expired", reason, now=now, reason=reason)
 
     @staticmethod
@@ -192,9 +218,13 @@ class Gateway:
             raise error
         return execution_view(row, principal)
 
-    def recheck(self, db, row, now, *, approval_in_progress=False):
+    def recheck(self, db, row, now, *, approval_in_progress=False, registry=None):
         if row["policy_revision"] != self.policy_revision:
             return "policy_changed"
+        if registry is None:
+            registry = self.current_registry(db)
+        if row["planned_registry_revision"] is not None and row["planned_registry_revision"] != registry.revision:
+            return "registry_changed"
         try:
             intent = validated_intent(row)
         except (ValueError, TypeError, RecursionError):
@@ -264,12 +294,13 @@ class Gateway:
             row = db.execute("SELECT * FROM executions WHERE status='ready' ORDER BY created_at,id LIMIT 1").fetchone()
             if row is None:
                 return None
-            reason = self.recheck(db, row, now)
+            registry = self.current_registry(db)
+            reason = self.recheck(db, row, now, registry=registry)
             if reason is not None:
                 transition(db, row, "denied", reason, now=now, reason=reason)
                 return row, None
             started = time.perf_counter_ns()
-            selected = self.registry.resolve(row["operation"])
+            selected = registry.resolve(row["operation"])
             self.measured("registry_lookup", started)
             if selected is None:
                 transition(db, row, "failed", "no_enabled_adapter", now=now, reason="no_enabled_adapter")
@@ -277,15 +308,15 @@ class Gateway:
             self.checkpoint("before_claim_commit", row)
             claimed = transition(db, row, "executing", "adapter_claimed", now=now, attempt=row["attempt"] + 1,
                                  adapter_id=selected.adapter_id, adapter_version=selected.version,
-                                 registry_revision=self.registry.revision)
+                                 registry_revision=registry.revision, mapping_revision=selected.mapping_revision)
         return claimed, selected
 
-    def finalize(self, row, state, reason, *, receipt=None, cleanup_path=None):
+    def finalize(self, row, state, reason, *, receipt=None, cleanup_path=None, evidence=None):
         with self.store.connect(write=True) as db:
             current = get_row(db, row["id"])
             if current["status"] != "executing" or current["attempt"] != row["attempt"]:
                 raise RuntimeError("Execution attempt changed unexpectedly")
-            transition(db, current, state, reason or "effect_verified", now=self.clock(),
+            transition(db, current, state, reason or evidence or "effect_verified", now=self.clock(),
                        reason=reason, receipt=receipt, cleanup_path=cleanup_path)
 
     def cleanup_files(self, execution_id=None):
@@ -390,20 +421,34 @@ class Gateway:
         intent = validated_intent(row)
         cleanup_path = intent.path if intent.operation == "write-file" else None
         try:
-            if selected.implementation in SQL_ADAPTERS:
+            if selected.mapping_revision is not None:
+                started = time.perf_counter_ns()
+                try:
+                    candidate = self.mcp.execute(row, intent)
+                except (ValidationError, ValueError) as exc:
+                    raise Uncertain("mcp_receipt_invalid") from exc
+                try:
+                    receipt = self.check_receipt(row, intent, candidate)
+                except (ValidationError, ValueError, Rejected) as exc:
+                    raise Uncertain("mcp_receipt_invalid") from exc
+                self.measured("mcp_transport", started)
+                self.finalize(row, "succeeded", None, receipt=receipt, evidence="mcp_acknowledged_and_read_back")
+            elif selected.implementation in SQL_ADAPTERS:
                 self.execute_sql(row, selected, intent)
             else:
                 self.execute_file(row, intent)
         except Rejected as exc:
             self.finalize(row, "failed", exc.code, cleanup_path=cleanup_path)
         except Uncertain:
-            self.finalize(row, "outcome_unknown", "file_publication_unconfirmed")
+            reason = "mcp_outcome_unconfirmed" if row["mapping_revision"] is not None else "file_publication_unconfirmed"
+            self.finalize(row, "outcome_unknown", reason)
         except sqlite3.Error:
             raise  # A commit may have reached disk. Recovery reads durable state before deciding.
         except (ValidationError, OSError):
             # SQL rollback and read-only failures have no business effect. A write failure can be ambiguous.
             LOG.error("Adapter failure for %s", row["id"])
-            state = "outcome_unknown" if cleanup_path is not None else "failed"
+            ambiguous = cleanup_path is not None or row["mapping_revision"] is not None
+            state = "outcome_unknown" if ambiguous else "failed"
             self.finalize(row, state, "adapter_io_or_receipt_failure")
         self.cleanup_files(row["id"])
         return True
@@ -412,6 +457,9 @@ class Gateway:
         with self.store.connect() as db:
             rows = db.execute("SELECT * FROM executions WHERE status='executing' ORDER BY created_at,id").fetchall()
         for row in rows:
+            if row["mapping_revision"] is not None:
+                self.finalize(row, "outcome_unknown", "mcp_interrupted_after_claim")
+                continue
             if row["operation"] != "write-file":
                 with self.store.connect(write=True) as db:
                     if row["attempt"] >= 3:

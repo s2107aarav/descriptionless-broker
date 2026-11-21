@@ -1,0 +1,1790 @@
+{
+  "runs": [
+    {
+      "operation": "send-message",
+      "boundary": "after_claim_commit",
+      "evidence": "intact",
+      "classification": "proven_success",
+      "expected": "proven_success",
+      "independent_check_passed": true,
+      "before": {
+        "execution": {
+          "id": "db26a7fb67e04de587ac67e6432051f4",
+          "status": "ready",
+          "reason": null,
+          "attempt": 0,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248077.502079,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248077.503904,
+            "detail": "approved",
+            "attempt": 0
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": null
+      },
+      "interrupted": {
+        "execution": {
+          "id": "db26a7fb67e04de587ac67e6432051f4",
+          "status": "executing",
+          "reason": null,
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248077.502079,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248077.503904,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248077.613534,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": null
+      },
+      "after": {
+        "execution": {
+          "id": "db26a7fb67e04de587ac67e6432051f4",
+          "status": "succeeded",
+          "reason": null,
+          "attempt": 2,
+          "request_key": "disposable-recovery-request",
+          "receipt": {
+            "delivery": "delivered_to_local_inbox",
+            "message_id": "msg-db26a7fb67e04de587ac67e6432051f4",
+            "recipient": "reviewer"
+          },
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248077.502079,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248077.503904,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248077.613534,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          },
+          {
+            "seq": 4,
+            "state": "ready",
+            "at": 1795248077.616915,
+            "detail": "interrupted_before_atomic_completion",
+            "attempt": 1
+          },
+          {
+            "seq": 5,
+            "state": "executing",
+            "at": 1795248077.6187992,
+            "detail": "adapter_claimed",
+            "attempt": 2
+          },
+          {
+            "seq": 6,
+            "state": "succeeded",
+            "at": 1795248077.619838,
+            "detail": "effect_verified",
+            "attempt": 2
+          }
+        ],
+        "inbox": [
+          {
+            "id": "msg-db26a7fb67e04de587ac67e6432051f4",
+            "recipient": "reviewer",
+            "body": "Disposable recovery notification.",
+            "origin_execution": "db26a7fb67e04de587ac67e6432051f4"
+          }
+        ],
+        "target": null,
+        "staged": null
+      },
+      "timeline": [
+        {
+          "seq": 1,
+          "state": "awaiting_approval",
+          "at": 1795248077.502079,
+          "detail": "approval_required",
+          "attempt": 0
+        },
+        {
+          "seq": 2,
+          "state": "ready",
+          "at": 1795248077.503904,
+          "detail": "approved",
+          "attempt": 0
+        },
+        {
+          "seq": 3,
+          "state": "executing",
+          "at": 1795248077.613534,
+          "detail": "adapter_claimed",
+          "attempt": 1
+        },
+        {
+          "event": "boundary_reached",
+          "boundary": "after_claim_commit",
+          "execution_id": "db26a7fb67e04de587ac67e6432051f4",
+          "attempt": 1
+        },
+        {
+          "event": "process_terminated",
+          "exit_code": 71
+        },
+        {
+          "event": "runtime_recovered"
+        },
+        {
+          "seq": 4,
+          "state": "ready",
+          "at": 1795248077.616915,
+          "detail": "interrupted_before_atomic_completion",
+          "attempt": 1
+        },
+        {
+          "seq": 5,
+          "state": "executing",
+          "at": 1795248077.6187992,
+          "detail": "adapter_claimed",
+          "attempt": 2
+        },
+        {
+          "seq": 6,
+          "state": "succeeded",
+          "at": 1795248077.619838,
+          "detail": "effect_verified",
+          "attempt": 2
+        },
+        {
+          "event": "original_request_replayed",
+          "created": false
+        }
+      ],
+      "child_exit_code": 71,
+      "recovery_ms": 4.808167,
+      "child_ms": 109.932166,
+      "provenance": {
+        "spec": "recovery-v1",
+        "spec_sha256": "d83bef3969faeccad0bd1889a21b8628c2a1496da1fd8a7571e2ee4f18ad8fd9",
+        "python": "3.12.0",
+        "sqlite": "3.42.0",
+        "platform": "macOS-26.3.1-arm64-arm-64bit",
+        "source_sha256": {
+          "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+          "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+          "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+          "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+          "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+          "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+          "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+        }
+      }
+    },
+    {
+      "operation": "send-message",
+      "boundary": "before_sql_commit",
+      "evidence": "intact",
+      "classification": "proven_success",
+      "expected": "proven_success",
+      "independent_check_passed": true,
+      "before": {
+        "execution": {
+          "id": "97b2fe47ff2e4755b59b902ad1a31248",
+          "status": "ready",
+          "reason": null,
+          "attempt": 0,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248077.628219,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248077.629798,
+            "detail": "approved",
+            "attempt": 0
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": null
+      },
+      "interrupted": {
+        "execution": {
+          "id": "97b2fe47ff2e4755b59b902ad1a31248",
+          "status": "executing",
+          "reason": null,
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248077.628219,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248077.629798,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248077.744549,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": null
+      },
+      "after": {
+        "execution": {
+          "id": "97b2fe47ff2e4755b59b902ad1a31248",
+          "status": "succeeded",
+          "reason": null,
+          "attempt": 2,
+          "request_key": "disposable-recovery-request",
+          "receipt": {
+            "delivery": "delivered_to_local_inbox",
+            "message_id": "msg-97b2fe47ff2e4755b59b902ad1a31248",
+            "recipient": "reviewer"
+          },
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248077.628219,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248077.629798,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248077.744549,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          },
+          {
+            "seq": 4,
+            "state": "ready",
+            "at": 1795248077.748597,
+            "detail": "interrupted_before_atomic_completion",
+            "attempt": 1
+          },
+          {
+            "seq": 5,
+            "state": "executing",
+            "at": 1795248077.750669,
+            "detail": "adapter_claimed",
+            "attempt": 2
+          },
+          {
+            "seq": 6,
+            "state": "succeeded",
+            "at": 1795248077.751782,
+            "detail": "effect_verified",
+            "attempt": 2
+          }
+        ],
+        "inbox": [
+          {
+            "id": "msg-97b2fe47ff2e4755b59b902ad1a31248",
+            "recipient": "reviewer",
+            "body": "Disposable recovery notification.",
+            "origin_execution": "97b2fe47ff2e4755b59b902ad1a31248"
+          }
+        ],
+        "target": null,
+        "staged": null
+      },
+      "timeline": [
+        {
+          "seq": 1,
+          "state": "awaiting_approval",
+          "at": 1795248077.628219,
+          "detail": "approval_required",
+          "attempt": 0
+        },
+        {
+          "seq": 2,
+          "state": "ready",
+          "at": 1795248077.629798,
+          "detail": "approved",
+          "attempt": 0
+        },
+        {
+          "seq": 3,
+          "state": "executing",
+          "at": 1795248077.744549,
+          "detail": "adapter_claimed",
+          "attempt": 1
+        },
+        {
+          "event": "boundary_reached",
+          "boundary": "before_sql_commit",
+          "execution_id": "97b2fe47ff2e4755b59b902ad1a31248",
+          "attempt": 1
+        },
+        {
+          "event": "process_terminated",
+          "exit_code": 71
+        },
+        {
+          "event": "runtime_recovered"
+        },
+        {
+          "seq": 4,
+          "state": "ready",
+          "at": 1795248077.748597,
+          "detail": "interrupted_before_atomic_completion",
+          "attempt": 1
+        },
+        {
+          "seq": 5,
+          "state": "executing",
+          "at": 1795248077.750669,
+          "detail": "adapter_claimed",
+          "attempt": 2
+        },
+        {
+          "seq": 6,
+          "state": "succeeded",
+          "at": 1795248077.751782,
+          "detail": "effect_verified",
+          "attempt": 2
+        },
+        {
+          "event": "original_request_replayed",
+          "created": false
+        }
+      ],
+      "child_exit_code": 71,
+      "recovery_ms": 5.238084,
+      "child_ms": 115.854625,
+      "provenance": {
+        "spec": "recovery-v1",
+        "spec_sha256": "d83bef3969faeccad0bd1889a21b8628c2a1496da1fd8a7571e2ee4f18ad8fd9",
+        "python": "3.12.0",
+        "sqlite": "3.42.0",
+        "platform": "macOS-26.3.1-arm64-arm-64bit",
+        "source_sha256": {
+          "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+          "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+          "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+          "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+          "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+          "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+          "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+        }
+      }
+    },
+    {
+      "operation": "send-message",
+      "boundary": "after_sql_commit",
+      "evidence": "intact",
+      "classification": "proven_success",
+      "expected": "proven_success",
+      "independent_check_passed": true,
+      "before": {
+        "execution": {
+          "id": "d35642d3225c4035b7df383bad6945a1",
+          "status": "ready",
+          "reason": null,
+          "attempt": 0,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248077.760637,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248077.762302,
+            "detail": "approved",
+            "attempt": 0
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": null
+      },
+      "interrupted": {
+        "execution": {
+          "id": "d35642d3225c4035b7df383bad6945a1",
+          "status": "succeeded",
+          "reason": null,
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": {
+            "delivery": "delivered_to_local_inbox",
+            "message_id": "msg-d35642d3225c4035b7df383bad6945a1",
+            "recipient": "reviewer"
+          },
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248077.760637,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248077.762302,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248077.876458,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          },
+          {
+            "seq": 4,
+            "state": "succeeded",
+            "at": 1795248077.877694,
+            "detail": "effect_verified",
+            "attempt": 1
+          }
+        ],
+        "inbox": [
+          {
+            "id": "msg-d35642d3225c4035b7df383bad6945a1",
+            "recipient": "reviewer",
+            "body": "Disposable recovery notification.",
+            "origin_execution": "d35642d3225c4035b7df383bad6945a1"
+          }
+        ],
+        "target": null,
+        "staged": null
+      },
+      "after": {
+        "execution": {
+          "id": "d35642d3225c4035b7df383bad6945a1",
+          "status": "succeeded",
+          "reason": null,
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": {
+            "delivery": "delivered_to_local_inbox",
+            "message_id": "msg-d35642d3225c4035b7df383bad6945a1",
+            "recipient": "reviewer"
+          },
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248077.760637,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248077.762302,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248077.876458,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          },
+          {
+            "seq": 4,
+            "state": "succeeded",
+            "at": 1795248077.877694,
+            "detail": "effect_verified",
+            "attempt": 1
+          }
+        ],
+        "inbox": [
+          {
+            "id": "msg-d35642d3225c4035b7df383bad6945a1",
+            "recipient": "reviewer",
+            "body": "Disposable recovery notification.",
+            "origin_execution": "d35642d3225c4035b7df383bad6945a1"
+          }
+        ],
+        "target": null,
+        "staged": null
+      },
+      "timeline": [
+        {
+          "seq": 1,
+          "state": "awaiting_approval",
+          "at": 1795248077.760637,
+          "detail": "approval_required",
+          "attempt": 0
+        },
+        {
+          "seq": 2,
+          "state": "ready",
+          "at": 1795248077.762302,
+          "detail": "approved",
+          "attempt": 0
+        },
+        {
+          "seq": 3,
+          "state": "executing",
+          "at": 1795248077.876458,
+          "detail": "adapter_claimed",
+          "attempt": 1
+        },
+        {
+          "seq": 4,
+          "state": "succeeded",
+          "at": 1795248077.877694,
+          "detail": "effect_verified",
+          "attempt": 1
+        },
+        {
+          "event": "boundary_reached",
+          "boundary": "after_sql_commit",
+          "execution_id": "d35642d3225c4035b7df383bad6945a1",
+          "attempt": 1
+        },
+        {
+          "event": "process_terminated",
+          "exit_code": 71
+        },
+        {
+          "event": "runtime_recovered"
+        },
+        {
+          "event": "original_request_replayed",
+          "created": false
+        }
+      ],
+      "child_exit_code": 71,
+      "recovery_ms": 2.408291,
+      "child_ms": 115.565166,
+      "provenance": {
+        "spec": "recovery-v1",
+        "spec_sha256": "d83bef3969faeccad0bd1889a21b8628c2a1496da1fd8a7571e2ee4f18ad8fd9",
+        "python": "3.12.0",
+        "sqlite": "3.42.0",
+        "platform": "macOS-26.3.1-arm64-arm-64bit",
+        "source_sha256": {
+          "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+          "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+          "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+          "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+          "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+          "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+          "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+        }
+      }
+    },
+    {
+      "operation": "write-file",
+      "boundary": "after_claim_commit",
+      "evidence": "intact",
+      "classification": "known_no_effect",
+      "expected": "known_no_effect",
+      "independent_check_passed": true,
+      "before": {
+        "execution": {
+          "id": "bbd3c327ca804001af316855546bdeca",
+          "status": "ready",
+          "reason": null,
+          "attempt": 0,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248077.89016,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248077.8918211,
+            "detail": "approved",
+            "attempt": 0
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": null
+      },
+      "interrupted": {
+        "execution": {
+          "id": "bbd3c327ca804001af316855546bdeca",
+          "status": "executing",
+          "reason": null,
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248077.89016,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248077.8918211,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248078.000598,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": null
+      },
+      "after": {
+        "execution": {
+          "id": "bbd3c327ca804001af316855546bdeca",
+          "status": "failed",
+          "reason": "interrupted_before_publication",
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248077.89016,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248077.8918211,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248078.000598,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          },
+          {
+            "seq": 4,
+            "state": "failed",
+            "at": 1795248078.00399,
+            "detail": "interrupted_before_publication",
+            "attempt": 1
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": null
+      },
+      "timeline": [
+        {
+          "seq": 1,
+          "state": "awaiting_approval",
+          "at": 1795248077.89016,
+          "detail": "approval_required",
+          "attempt": 0
+        },
+        {
+          "seq": 2,
+          "state": "ready",
+          "at": 1795248077.8918211,
+          "detail": "approved",
+          "attempt": 0
+        },
+        {
+          "seq": 3,
+          "state": "executing",
+          "at": 1795248078.000598,
+          "detail": "adapter_claimed",
+          "attempt": 1
+        },
+        {
+          "event": "boundary_reached",
+          "boundary": "after_claim_commit",
+          "execution_id": "bbd3c327ca804001af316855546bdeca",
+          "attempt": 1
+        },
+        {
+          "event": "process_terminated",
+          "exit_code": 71
+        },
+        {
+          "event": "runtime_recovered"
+        },
+        {
+          "seq": 4,
+          "state": "failed",
+          "at": 1795248078.00399,
+          "detail": "interrupted_before_publication",
+          "attempt": 1
+        },
+        {
+          "event": "original_request_replayed",
+          "created": false
+        }
+      ],
+      "child_exit_code": 71,
+      "recovery_ms": 4.205041,
+      "child_ms": 109.121875,
+      "provenance": {
+        "spec": "recovery-v1",
+        "spec_sha256": "d83bef3969faeccad0bd1889a21b8628c2a1496da1fd8a7571e2ee4f18ad8fd9",
+        "python": "3.12.0",
+        "sqlite": "3.42.0",
+        "platform": "macOS-26.3.1-arm64-arm-64bit",
+        "source_sha256": {
+          "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+          "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+          "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+          "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+          "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+          "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+          "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+        }
+      }
+    },
+    {
+      "operation": "write-file",
+      "boundary": "after_file_stage",
+      "evidence": "intact",
+      "classification": "outcome_unknown",
+      "expected": "outcome_unknown",
+      "independent_check_passed": true,
+      "before": {
+        "execution": {
+          "id": "414beae4b4714343b4a9d42e916882ab",
+          "status": "ready",
+          "reason": null,
+          "attempt": 0,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248078.014303,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248078.015908,
+            "detail": "approved",
+            "attempt": 0
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": null
+      },
+      "interrupted": {
+        "execution": {
+          "id": "414beae4b4714343b4a9d42e916882ab",
+          "status": "executing",
+          "reason": null,
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": {
+            "bytes": 28,
+            "directory": [
+              16777233,
+              252002751
+            ],
+            "inode": [
+              16777233,
+              252002763
+            ],
+            "path": "reports/recovery.txt",
+            "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+          }
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248078.014303,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248078.015908,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248078.125123,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": {
+          "regular_file": true,
+          "inode": [
+            16777233,
+            252002763
+          ],
+          "bytes": 28,
+          "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+        }
+      },
+      "after": {
+        "execution": {
+          "id": "414beae4b4714343b4a9d42e916882ab",
+          "status": "outcome_unknown",
+          "reason": "file_publication_unconfirmed",
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": {
+            "bytes": 28,
+            "directory": [
+              16777233,
+              252002751
+            ],
+            "inode": [
+              16777233,
+              252002763
+            ],
+            "path": "reports/recovery.txt",
+            "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+          }
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248078.014303,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248078.015908,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248078.125123,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          },
+          {
+            "seq": 4,
+            "state": "outcome_unknown",
+            "at": 1795248078.129962,
+            "detail": "file_publication_unconfirmed",
+            "attempt": 1
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": {
+          "regular_file": true,
+          "inode": [
+            16777233,
+            252002763
+          ],
+          "bytes": 28,
+          "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+        }
+      },
+      "timeline": [
+        {
+          "seq": 1,
+          "state": "awaiting_approval",
+          "at": 1795248078.014303,
+          "detail": "approval_required",
+          "attempt": 0
+        },
+        {
+          "seq": 2,
+          "state": "ready",
+          "at": 1795248078.015908,
+          "detail": "approved",
+          "attempt": 0
+        },
+        {
+          "seq": 3,
+          "state": "executing",
+          "at": 1795248078.125123,
+          "detail": "adapter_claimed",
+          "attempt": 1
+        },
+        {
+          "event": "boundary_reached",
+          "boundary": "after_file_stage",
+          "execution_id": "414beae4b4714343b4a9d42e916882ab",
+          "attempt": 1
+        },
+        {
+          "event": "process_terminated",
+          "exit_code": 71
+        },
+        {
+          "event": "runtime_recovered"
+        },
+        {
+          "seq": 4,
+          "state": "outcome_unknown",
+          "at": 1795248078.129962,
+          "detail": "file_publication_unconfirmed",
+          "attempt": 1
+        },
+        {
+          "event": "original_request_replayed",
+          "created": false
+        }
+      ],
+      "child_exit_code": 71,
+      "recovery_ms": 3.580875,
+      "child_ms": 110.87075,
+      "provenance": {
+        "spec": "recovery-v1",
+        "spec_sha256": "d83bef3969faeccad0bd1889a21b8628c2a1496da1fd8a7571e2ee4f18ad8fd9",
+        "python": "3.12.0",
+        "sqlite": "3.42.0",
+        "platform": "macOS-26.3.1-arm64-arm-64bit",
+        "source_sha256": {
+          "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+          "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+          "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+          "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+          "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+          "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+          "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+        }
+      }
+    },
+    {
+      "operation": "write-file",
+      "boundary": "after_file_publish",
+      "evidence": "intact",
+      "classification": "proven_success",
+      "expected": "proven_success",
+      "independent_check_passed": true,
+      "before": {
+        "execution": {
+          "id": "cfbf3e098c2d464fae84bf5f2543286e",
+          "status": "ready",
+          "reason": null,
+          "attempt": 0,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248078.14014,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248078.141809,
+            "detail": "approved",
+            "attempt": 0
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": null
+      },
+      "interrupted": {
+        "execution": {
+          "id": "cfbf3e098c2d464fae84bf5f2543286e",
+          "status": "executing",
+          "reason": null,
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": {
+            "bytes": 28,
+            "directory": [
+              16777233,
+              252002792
+            ],
+            "inode": [
+              16777233,
+              252002804
+            ],
+            "path": "reports/recovery.txt",
+            "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+          }
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248078.14014,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248078.141809,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248078.250117,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          }
+        ],
+        "inbox": [],
+        "target": {
+          "regular_file": true,
+          "inode": [
+            16777233,
+            252002804
+          ],
+          "bytes": 28,
+          "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+        },
+        "staged": {
+          "regular_file": true,
+          "inode": [
+            16777233,
+            252002804
+          ],
+          "bytes": 28,
+          "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+        }
+      },
+      "after": {
+        "execution": {
+          "id": "cfbf3e098c2d464fae84bf5f2543286e",
+          "status": "succeeded",
+          "reason": null,
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": {
+            "bytes": 28,
+            "path": "reports/recovery.txt",
+            "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+          },
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248078.14014,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248078.141809,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248078.250117,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          },
+          {
+            "seq": 4,
+            "state": "succeeded",
+            "at": 1795248078.2554271,
+            "detail": "effect_verified",
+            "attempt": 1
+          }
+        ],
+        "inbox": [],
+        "target": {
+          "regular_file": true,
+          "inode": [
+            16777233,
+            252002804
+          ],
+          "bytes": 28,
+          "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+        },
+        "staged": null
+      },
+      "timeline": [
+        {
+          "seq": 1,
+          "state": "awaiting_approval",
+          "at": 1795248078.14014,
+          "detail": "approval_required",
+          "attempt": 0
+        },
+        {
+          "seq": 2,
+          "state": "ready",
+          "at": 1795248078.141809,
+          "detail": "approved",
+          "attempt": 0
+        },
+        {
+          "seq": 3,
+          "state": "executing",
+          "at": 1795248078.250117,
+          "detail": "adapter_claimed",
+          "attempt": 1
+        },
+        {
+          "event": "boundary_reached",
+          "boundary": "after_file_publish",
+          "execution_id": "cfbf3e098c2d464fae84bf5f2543286e",
+          "attempt": 1
+        },
+        {
+          "event": "process_terminated",
+          "exit_code": 71
+        },
+        {
+          "event": "runtime_recovered"
+        },
+        {
+          "seq": 4,
+          "state": "succeeded",
+          "at": 1795248078.2554271,
+          "detail": "effect_verified",
+          "attempt": 1
+        },
+        {
+          "event": "original_request_replayed",
+          "created": false
+        }
+      ],
+      "child_exit_code": 71,
+      "recovery_ms": 4.610792,
+      "child_ms": 110.211833,
+      "provenance": {
+        "spec": "recovery-v1",
+        "spec_sha256": "d83bef3969faeccad0bd1889a21b8628c2a1496da1fd8a7571e2ee4f18ad8fd9",
+        "python": "3.12.0",
+        "sqlite": "3.42.0",
+        "platform": "macOS-26.3.1-arm64-arm-64bit",
+        "source_sha256": {
+          "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+          "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+          "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+          "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+          "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+          "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+          "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+        }
+      }
+    },
+    {
+      "operation": "write-file",
+      "boundary": "after_file_commit",
+      "evidence": "intact",
+      "classification": "proven_success",
+      "expected": "proven_success",
+      "independent_check_passed": true,
+      "before": {
+        "execution": {
+          "id": "548cf63e13fc4a669f7aeaa617a3c0bb",
+          "status": "ready",
+          "reason": null,
+          "attempt": 0,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248078.266239,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248078.2678819,
+            "detail": "approved",
+            "attempt": 0
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": null
+      },
+      "interrupted": {
+        "execution": {
+          "id": "548cf63e13fc4a669f7aeaa617a3c0bb",
+          "status": "succeeded",
+          "reason": null,
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": {
+            "bytes": 28,
+            "path": "reports/recovery.txt",
+            "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+          },
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248078.266239,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248078.2678819,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248078.37672,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          },
+          {
+            "seq": 4,
+            "state": "succeeded",
+            "at": 1795248078.379621,
+            "detail": "effect_verified",
+            "attempt": 1
+          }
+        ],
+        "inbox": [],
+        "target": {
+          "regular_file": true,
+          "inode": [
+            16777233,
+            252002849
+          ],
+          "bytes": 28,
+          "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+        },
+        "staged": {
+          "regular_file": true,
+          "inode": [
+            16777233,
+            252002849
+          ],
+          "bytes": 28,
+          "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+        }
+      },
+      "after": {
+        "execution": {
+          "id": "548cf63e13fc4a669f7aeaa617a3c0bb",
+          "status": "succeeded",
+          "reason": null,
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": {
+            "bytes": 28,
+            "path": "reports/recovery.txt",
+            "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+          },
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248078.266239,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248078.2678819,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248078.37672,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          },
+          {
+            "seq": 4,
+            "state": "succeeded",
+            "at": 1795248078.379621,
+            "detail": "effect_verified",
+            "attempt": 1
+          }
+        ],
+        "inbox": [],
+        "target": {
+          "regular_file": true,
+          "inode": [
+            16777233,
+            252002849
+          ],
+          "bytes": 28,
+          "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+        },
+        "staged": null
+      },
+      "timeline": [
+        {
+          "seq": 1,
+          "state": "awaiting_approval",
+          "at": 1795248078.266239,
+          "detail": "approval_required",
+          "attempt": 0
+        },
+        {
+          "seq": 2,
+          "state": "ready",
+          "at": 1795248078.2678819,
+          "detail": "approved",
+          "attempt": 0
+        },
+        {
+          "seq": 3,
+          "state": "executing",
+          "at": 1795248078.37672,
+          "detail": "adapter_claimed",
+          "attempt": 1
+        },
+        {
+          "seq": 4,
+          "state": "succeeded",
+          "at": 1795248078.379621,
+          "detail": "effect_verified",
+          "attempt": 1
+        },
+        {
+          "event": "boundary_reached",
+          "boundary": "after_file_commit",
+          "execution_id": "548cf63e13fc4a669f7aeaa617a3c0bb",
+          "attempt": 1
+        },
+        {
+          "event": "process_terminated",
+          "exit_code": 71
+        },
+        {
+          "event": "runtime_recovered"
+        },
+        {
+          "event": "original_request_replayed",
+          "created": false
+        }
+      ],
+      "child_exit_code": 71,
+      "recovery_ms": 3.172125,
+      "child_ms": 111.905416,
+      "provenance": {
+        "spec": "recovery-v1",
+        "spec_sha256": "d83bef3969faeccad0bd1889a21b8628c2a1496da1fd8a7571e2ee4f18ad8fd9",
+        "python": "3.12.0",
+        "sqlite": "3.42.0",
+        "platform": "macOS-26.3.1-arm64-arm-64bit",
+        "source_sha256": {
+          "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+          "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+          "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+          "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+          "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+          "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+          "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+        }
+      }
+    },
+    {
+      "operation": "write-file",
+      "boundary": "after_file_publish",
+      "evidence": "remove-staging",
+      "classification": "outcome_unknown",
+      "expected": "outcome_unknown",
+      "independent_check_passed": true,
+      "before": {
+        "execution": {
+          "id": "305c6fa4472e4b0990222623c295ecab",
+          "status": "ready",
+          "reason": null,
+          "attempt": 0,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": null
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248078.393146,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248078.394794,
+            "detail": "approved",
+            "attempt": 0
+          }
+        ],
+        "inbox": [],
+        "target": null,
+        "staged": null
+      },
+      "interrupted": {
+        "execution": {
+          "id": "305c6fa4472e4b0990222623c295ecab",
+          "status": "executing",
+          "reason": null,
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": {
+            "bytes": 28,
+            "directory": [
+              16777233,
+              252002882
+            ],
+            "inode": [
+              16777233,
+              252002894
+            ],
+            "path": "reports/recovery.txt",
+            "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+          }
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248078.393146,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248078.394794,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248078.5036721,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          }
+        ],
+        "inbox": [],
+        "target": {
+          "regular_file": true,
+          "inode": [
+            16777233,
+            252002894
+          ],
+          "bytes": 28,
+          "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+        },
+        "staged": {
+          "regular_file": true,
+          "inode": [
+            16777233,
+            252002894
+          ],
+          "bytes": 28,
+          "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+        }
+      },
+      "after": {
+        "execution": {
+          "id": "305c6fa4472e4b0990222623c295ecab",
+          "status": "outcome_unknown",
+          "reason": "file_publication_unconfirmed",
+          "attempt": 1,
+          "request_key": "disposable-recovery-request",
+          "receipt": null,
+          "stage": {
+            "bytes": 28,
+            "directory": [
+              16777233,
+              252002882
+            ],
+            "inode": [
+              16777233,
+              252002894
+            ],
+            "path": "reports/recovery.txt",
+            "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+          }
+        },
+        "execution_count": 1,
+        "events": [
+          {
+            "seq": 1,
+            "state": "awaiting_approval",
+            "at": 1795248078.393146,
+            "detail": "approval_required",
+            "attempt": 0
+          },
+          {
+            "seq": 2,
+            "state": "ready",
+            "at": 1795248078.394794,
+            "detail": "approved",
+            "attempt": 0
+          },
+          {
+            "seq": 3,
+            "state": "executing",
+            "at": 1795248078.5036721,
+            "detail": "adapter_claimed",
+            "attempt": 1
+          },
+          {
+            "seq": 4,
+            "state": "outcome_unknown",
+            "at": 1795248078.509131,
+            "detail": "file_publication_unconfirmed",
+            "attempt": 1
+          }
+        ],
+        "inbox": [],
+        "target": {
+          "regular_file": true,
+          "inode": [
+            16777233,
+            252002894
+          ],
+          "bytes": 28,
+          "sha256": "23642122172c3f2230f3449c791d988181b94a7d779d81632d14689ecc72391f"
+        },
+        "staged": null
+      },
+      "timeline": [
+        {
+          "seq": 1,
+          "state": "awaiting_approval",
+          "at": 1795248078.393146,
+          "detail": "approval_required",
+          "attempt": 0
+        },
+        {
+          "seq": 2,
+          "state": "ready",
+          "at": 1795248078.394794,
+          "detail": "approved",
+          "attempt": 0
+        },
+        {
+          "seq": 3,
+          "state": "executing",
+          "at": 1795248078.5036721,
+          "detail": "adapter_claimed",
+          "attempt": 1
+        },
+        {
+          "event": "boundary_reached",
+          "boundary": "after_file_publish",
+          "execution_id": "305c6fa4472e4b0990222623c295ecab",
+          "attempt": 1
+        },
+        {
+          "event": "process_terminated",
+          "exit_code": 71
+        },
+        {
+          "event": "staging_evidence_removed_in_disposable_runtime"
+        },
+        {
+          "event": "runtime_recovered"
+        },
+        {
+          "seq": 4,
+          "state": "outcome_unknown",
+          "at": 1795248078.509131,
+          "detail": "file_publication_unconfirmed",
+          "attempt": 1
+        },
+        {
+          "event": "original_request_replayed",
+          "created": false
+        }
+      ],
+      "child_exit_code": 71,
+      "recovery_ms": 3.575167,
+      "child_ms": 111.050958,
+      "provenance": {
+        "spec": "recovery-v1",
+        "spec_sha256": "d83bef3969faeccad0bd1889a21b8628c2a1496da1fd8a7571e2ee4f18ad8fd9",
+        "python": "3.12.0",
+        "sqlite": "3.42.0",
+        "platform": "macOS-26.3.1-arm64-arm-64bit",
+        "source_sha256": {
+          "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+          "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+          "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+          "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+          "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+          "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+          "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+        }
+      }
+    }
+  ],
+  "latency": {
+    "count": 8,
+    "p50_ms": 3.5809,
+    "p95_ms": 5.2381
+  }
+}

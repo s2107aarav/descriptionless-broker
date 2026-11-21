@@ -1,0 +1,691 @@
+{
+  "spec_sha256": "afca76d5a4d3ca7c0eb877d273d2a16be5e85cee041cd3011d5fe6b60f9b0b76",
+  "runs": [
+    {
+      "workflow": {
+        "id": "7903fb904f064834985c9cec44142f1e",
+        "status": "succeeded",
+        "created_at": 1795248077.131199,
+        "requester": "requester",
+        "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+        "registry_revision": "b659bff1d218666065c3d95738a87fd419d3ccc2191028b39a0d4dc81d27f634",
+        "nodes": [
+          {
+            "id": "ticket",
+            "operation": "create-ticket",
+            "depends_on": [],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "9655f0c1241e4cf1804f3959bc337328",
+            "outputs": {
+              "revision": 1,
+              "status": "open",
+              "ticket_id": "tkt-9655f0c1241e4cf1804f3959bc337328"
+            }
+          },
+          {
+            "id": "report",
+            "operation": "write-file",
+            "depends_on": [
+              "ticket"
+            ],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "a9da2c4ca569449cb650a4b927b918c7",
+            "outputs": {
+              "bytes": 46,
+              "path": "reports/incident-1.txt",
+              "sha256": "83e83e04561f53759a3a1bc982bf38eb3e5c9d13ce8731dda4a50924d3a447c9"
+            }
+          },
+          {
+            "id": "notify",
+            "operation": "send-message",
+            "depends_on": [
+              "report",
+              "ticket"
+            ],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "ad1e5177296b4a4cbdae8745e7ac5366",
+            "outputs": {
+              "message_id": "msg-ad1e5177296b4a4cbdae8745e7ac5366",
+              "recipient": "reviewer"
+            }
+          }
+        ]
+      },
+      "reviewed": [
+        {
+          "request_hash": "119477d3a89e37a112d29e3a67ea451bb978fcff8bbc33949f7719efb9498bfb",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "create-ticket",
+            "title": "Evaluation incident 1",
+            "detail": "Verify queue latency"
+          },
+          "execution_id": "9655f0c1241e4cf1804f3959bc337328",
+          "planned_adapter": "mcp-review-tickets"
+        },
+        {
+          "request_hash": "45decc91bd062813109144dff440c7987fc1dd14239d2185d2c576e13e855e48",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "write-file",
+            "path": "reports/incident-1.txt",
+            "content": "Reference tkt-9655f0c1241e4cf1804f3959bc337328"
+          },
+          "execution_id": "a9da2c4ca569449cb650a4b927b918c7",
+          "planned_adapter": "local-write-file"
+        },
+        {
+          "request_hash": "5656c05d131a33eb788381e8dae2cb9401d8e1bf602faa2ef34c71897d38106e",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "send-message",
+            "recipient": "reviewer",
+            "body": "Review tkt-9655f0c1241e4cf1804f3959bc337328 at reports/incident-1.txt"
+          },
+          "execution_id": "ad1e5177296b4a4cbdae8745e7ac5366",
+          "planned_adapter": "local-send-message"
+        }
+      ],
+      "ticket_execution": {
+        "id": "9655f0c1241e4cf1804f3959bc337328",
+        "operation": "create-ticket",
+        "status": "succeeded",
+        "reason": null,
+        "created_at": 1795248077.132517,
+        "updated_at": 1795248077.156662,
+        "approval_expires_at": 1795248977.132517,
+        "receipt": {
+          "revision": 1,
+          "status": "open",
+          "ticket_id": "tkt-9655f0c1241e4cf1804f3959bc337328"
+        },
+        "requester": "requester",
+        "request_hash": "119477d3a89e37a112d29e3a67ea451bb978fcff8bbc33949f7719efb9498bfb",
+        "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+        "adapter": "mcp-review-tickets",
+        "planned_adapter": "mcp-review-tickets",
+        "adapter_version": "1",
+        "registry_revision": "b659bff1d218666065c3d95738a87fd419d3ccc2191028b39a0d4dc81d27f634",
+        "mapping_revision": 1
+      },
+      "observed": {
+        "ticket": [
+          "Evaluation incident 1",
+          "Verify queue latency"
+        ],
+        "report": "Reference tkt-9655f0c1241e4cf1804f3959bc337328",
+        "inbox_matches": 1,
+        "local_fallbacks": 0
+      },
+      "passed": true
+    },
+    {
+      "workflow": {
+        "id": "019ad95f2f7c4c999743976d4c4ae6f0",
+        "status": "succeeded",
+        "created_at": 1795248077.17654,
+        "requester": "requester",
+        "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+        "registry_revision": "b659bff1d218666065c3d95738a87fd419d3ccc2191028b39a0d4dc81d27f634",
+        "nodes": [
+          {
+            "id": "ticket",
+            "operation": "create-ticket",
+            "depends_on": [],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "a28ca4b878f74858b5a806c4f4dc70a1",
+            "outputs": {
+              "revision": 1,
+              "status": "open",
+              "ticket_id": "tkt-a28ca4b878f74858b5a806c4f4dc70a1"
+            }
+          },
+          {
+            "id": "report",
+            "operation": "write-file",
+            "depends_on": [
+              "ticket"
+            ],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "9950d3125664431786a67cece418a7f3",
+            "outputs": {
+              "bytes": 46,
+              "path": "reports/incident-2.txt",
+              "sha256": "40a22438c74ee4d18cf58d02b55c020ae577dd15d0d4e5db7138041333e1037a"
+            }
+          },
+          {
+            "id": "notify",
+            "operation": "send-message",
+            "depends_on": [
+              "report",
+              "ticket"
+            ],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "c3529c65be1247478e14a6727f7fd565",
+            "outputs": {
+              "message_id": "msg-c3529c65be1247478e14a6727f7fd565",
+              "recipient": "reviewer"
+            }
+          }
+        ]
+      },
+      "reviewed": [
+        {
+          "request_hash": "c87d55efd8b14b10e5390b83f1c0a6297877862c17106f8b6aba8e0af36c9377",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "create-ticket",
+            "title": "Evaluation incident 2",
+            "detail": "Verify queue latency"
+          },
+          "execution_id": "a28ca4b878f74858b5a806c4f4dc70a1",
+          "planned_adapter": "mcp-review-tickets"
+        },
+        {
+          "request_hash": "986f1914aa68e5126eeca684f3ac0b5b96fe37d6880bfec5b23201c20d4b92f1",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "write-file",
+            "path": "reports/incident-2.txt",
+            "content": "Reference tkt-a28ca4b878f74858b5a806c4f4dc70a1"
+          },
+          "execution_id": "9950d3125664431786a67cece418a7f3",
+          "planned_adapter": "local-write-file"
+        },
+        {
+          "request_hash": "1ae9f8624965256f356371ea31088ee2dd99d40b5b1ee3a0fc683e3ad2c0b326",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "send-message",
+            "recipient": "reviewer",
+            "body": "Review tkt-a28ca4b878f74858b5a806c4f4dc70a1 at reports/incident-2.txt"
+          },
+          "execution_id": "c3529c65be1247478e14a6727f7fd565",
+          "planned_adapter": "local-send-message"
+        }
+      ],
+      "ticket_execution": {
+        "id": "a28ca4b878f74858b5a806c4f4dc70a1",
+        "operation": "create-ticket",
+        "status": "succeeded",
+        "reason": null,
+        "created_at": 1795248077.17757,
+        "updated_at": 1795248077.201199,
+        "approval_expires_at": 1795248977.17757,
+        "receipt": {
+          "revision": 1,
+          "status": "open",
+          "ticket_id": "tkt-a28ca4b878f74858b5a806c4f4dc70a1"
+        },
+        "requester": "requester",
+        "request_hash": "c87d55efd8b14b10e5390b83f1c0a6297877862c17106f8b6aba8e0af36c9377",
+        "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+        "adapter": "mcp-review-tickets",
+        "planned_adapter": "mcp-review-tickets",
+        "adapter_version": "1",
+        "registry_revision": "b659bff1d218666065c3d95738a87fd419d3ccc2191028b39a0d4dc81d27f634",
+        "mapping_revision": 1
+      },
+      "observed": {
+        "ticket": [
+          "Evaluation incident 2",
+          "Verify queue latency"
+        ],
+        "report": "Reference tkt-a28ca4b878f74858b5a806c4f4dc70a1",
+        "inbox_matches": 1,
+        "local_fallbacks": 0
+      },
+      "passed": true
+    },
+    {
+      "workflow": {
+        "id": "e1450295860042f0838518ba5e8effbb",
+        "status": "succeeded",
+        "created_at": 1795248077.22205,
+        "requester": "requester",
+        "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+        "registry_revision": "b659bff1d218666065c3d95738a87fd419d3ccc2191028b39a0d4dc81d27f634",
+        "nodes": [
+          {
+            "id": "ticket",
+            "operation": "create-ticket",
+            "depends_on": [],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "e3676cdb14014efe82c3fdd1829cea94",
+            "outputs": {
+              "revision": 1,
+              "status": "open",
+              "ticket_id": "tkt-e3676cdb14014efe82c3fdd1829cea94"
+            }
+          },
+          {
+            "id": "report",
+            "operation": "write-file",
+            "depends_on": [
+              "ticket"
+            ],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "9056fc4afa464bd6aac5031ab643b07a",
+            "outputs": {
+              "bytes": 46,
+              "path": "reports/incident-3.txt",
+              "sha256": "3e11802048cf7327e8c152dadcf58021a7fe178e990739fddb9273cffb926b97"
+            }
+          },
+          {
+            "id": "notify",
+            "operation": "send-message",
+            "depends_on": [
+              "report",
+              "ticket"
+            ],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "7ec3a9286e5e4aed8eb2dfc82871cfee",
+            "outputs": {
+              "message_id": "msg-7ec3a9286e5e4aed8eb2dfc82871cfee",
+              "recipient": "reviewer"
+            }
+          }
+        ]
+      },
+      "reviewed": [
+        {
+          "request_hash": "428c5b43c648207924fb3d1cb4a1ba1a64bf1c1896c460b70cf9c1a266a2c4a7",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "create-ticket",
+            "title": "Evaluation incident 3",
+            "detail": "Verify queue latency"
+          },
+          "execution_id": "e3676cdb14014efe82c3fdd1829cea94",
+          "planned_adapter": "mcp-review-tickets"
+        },
+        {
+          "request_hash": "f706725af73eae31f5a6ac46a952f93f5df98e6b5fd5610a01bffe2118a1da29",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "write-file",
+            "path": "reports/incident-3.txt",
+            "content": "Reference tkt-e3676cdb14014efe82c3fdd1829cea94"
+          },
+          "execution_id": "9056fc4afa464bd6aac5031ab643b07a",
+          "planned_adapter": "local-write-file"
+        },
+        {
+          "request_hash": "36478e729a06346290d5ce01b1ac31d02156f74c83b0ff247e57e5e28e03c904",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "send-message",
+            "recipient": "reviewer",
+            "body": "Review tkt-e3676cdb14014efe82c3fdd1829cea94 at reports/incident-3.txt"
+          },
+          "execution_id": "7ec3a9286e5e4aed8eb2dfc82871cfee",
+          "planned_adapter": "local-send-message"
+        }
+      ],
+      "ticket_execution": {
+        "id": "e3676cdb14014efe82c3fdd1829cea94",
+        "operation": "create-ticket",
+        "status": "succeeded",
+        "reason": null,
+        "created_at": 1795248077.223163,
+        "updated_at": 1795248077.247284,
+        "approval_expires_at": 1795248977.223163,
+        "receipt": {
+          "revision": 1,
+          "status": "open",
+          "ticket_id": "tkt-e3676cdb14014efe82c3fdd1829cea94"
+        },
+        "requester": "requester",
+        "request_hash": "428c5b43c648207924fb3d1cb4a1ba1a64bf1c1896c460b70cf9c1a266a2c4a7",
+        "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+        "adapter": "mcp-review-tickets",
+        "planned_adapter": "mcp-review-tickets",
+        "adapter_version": "1",
+        "registry_revision": "b659bff1d218666065c3d95738a87fd419d3ccc2191028b39a0d4dc81d27f634",
+        "mapping_revision": 1
+      },
+      "observed": {
+        "ticket": [
+          "Evaluation incident 3",
+          "Verify queue latency"
+        ],
+        "report": "Reference tkt-e3676cdb14014efe82c3fdd1829cea94",
+        "inbox_matches": 1,
+        "local_fallbacks": 0
+      },
+      "passed": true
+    },
+    {
+      "workflow": {
+        "id": "25db123de2f746ec8dddec0bf03ea10a",
+        "status": "succeeded",
+        "created_at": 1795248077.267274,
+        "requester": "requester",
+        "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+        "registry_revision": "b659bff1d218666065c3d95738a87fd419d3ccc2191028b39a0d4dc81d27f634",
+        "nodes": [
+          {
+            "id": "ticket",
+            "operation": "create-ticket",
+            "depends_on": [],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "e716f16a2e4d45c7a6c2fdc30e684cb9",
+            "outputs": {
+              "revision": 1,
+              "status": "open",
+              "ticket_id": "tkt-e716f16a2e4d45c7a6c2fdc30e684cb9"
+            }
+          },
+          {
+            "id": "report",
+            "operation": "write-file",
+            "depends_on": [
+              "ticket"
+            ],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "3dd2d78835f243aea3c0991d3aa3fa80",
+            "outputs": {
+              "bytes": 46,
+              "path": "reports/incident-4.txt",
+              "sha256": "e612b28bf8053e2e9dcfd564f16bb2c467d599055368ea317c6732e5be12ce53"
+            }
+          },
+          {
+            "id": "notify",
+            "operation": "send-message",
+            "depends_on": [
+              "report",
+              "ticket"
+            ],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "dce3403acb104167b39ef046951663b8",
+            "outputs": {
+              "message_id": "msg-dce3403acb104167b39ef046951663b8",
+              "recipient": "reviewer"
+            }
+          }
+        ]
+      },
+      "reviewed": [
+        {
+          "request_hash": "99793802b369167ee17481c2ff0ab24bdccfa21f1b47c5ae3807ee63fe179ebf",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "create-ticket",
+            "title": "Evaluation incident 4",
+            "detail": "Verify queue latency"
+          },
+          "execution_id": "e716f16a2e4d45c7a6c2fdc30e684cb9",
+          "planned_adapter": "mcp-review-tickets"
+        },
+        {
+          "request_hash": "88f337fad6b54c97f40b9e99cf30f051cd619b26dc99e3f770731fc173204683",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "write-file",
+            "path": "reports/incident-4.txt",
+            "content": "Reference tkt-e716f16a2e4d45c7a6c2fdc30e684cb9"
+          },
+          "execution_id": "3dd2d78835f243aea3c0991d3aa3fa80",
+          "planned_adapter": "local-write-file"
+        },
+        {
+          "request_hash": "4d61db3ed1399bd6d21972c428ca7e08fac47429154dffbd1e32cd3958c297b3",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "send-message",
+            "recipient": "reviewer",
+            "body": "Review tkt-e716f16a2e4d45c7a6c2fdc30e684cb9 at reports/incident-4.txt"
+          },
+          "execution_id": "dce3403acb104167b39ef046951663b8",
+          "planned_adapter": "local-send-message"
+        }
+      ],
+      "ticket_execution": {
+        "id": "e716f16a2e4d45c7a6c2fdc30e684cb9",
+        "operation": "create-ticket",
+        "status": "succeeded",
+        "reason": null,
+        "created_at": 1795248077.2683342,
+        "updated_at": 1795248077.291994,
+        "approval_expires_at": 1795248977.2683342,
+        "receipt": {
+          "revision": 1,
+          "status": "open",
+          "ticket_id": "tkt-e716f16a2e4d45c7a6c2fdc30e684cb9"
+        },
+        "requester": "requester",
+        "request_hash": "99793802b369167ee17481c2ff0ab24bdccfa21f1b47c5ae3807ee63fe179ebf",
+        "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+        "adapter": "mcp-review-tickets",
+        "planned_adapter": "mcp-review-tickets",
+        "adapter_version": "1",
+        "registry_revision": "b659bff1d218666065c3d95738a87fd419d3ccc2191028b39a0d4dc81d27f634",
+        "mapping_revision": 1
+      },
+      "observed": {
+        "ticket": [
+          "Evaluation incident 4",
+          "Verify queue latency"
+        ],
+        "report": "Reference tkt-e716f16a2e4d45c7a6c2fdc30e684cb9",
+        "inbox_matches": 1,
+        "local_fallbacks": 0
+      },
+      "passed": true
+    },
+    {
+      "workflow": {
+        "id": "031f44335c5944118656fe0b3617c938",
+        "status": "succeeded",
+        "created_at": 1795248077.313317,
+        "requester": "requester",
+        "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+        "registry_revision": "b659bff1d218666065c3d95738a87fd419d3ccc2191028b39a0d4dc81d27f634",
+        "nodes": [
+          {
+            "id": "ticket",
+            "operation": "create-ticket",
+            "depends_on": [],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "afa0c748ea9742518c3bf13b2d014dc1",
+            "outputs": {
+              "revision": 1,
+              "status": "open",
+              "ticket_id": "tkt-afa0c748ea9742518c3bf13b2d014dc1"
+            }
+          },
+          {
+            "id": "report",
+            "operation": "write-file",
+            "depends_on": [
+              "ticket"
+            ],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "d39c629e3957493985695e923c455107",
+            "outputs": {
+              "bytes": 46,
+              "path": "reports/incident-5.txt",
+              "sha256": "b9855002952bf06d488465361a218b0962632ca802a05cf8345fe88dfc63b051"
+            }
+          },
+          {
+            "id": "notify",
+            "operation": "send-message",
+            "depends_on": [
+              "report",
+              "ticket"
+            ],
+            "status": "succeeded",
+            "reason": null,
+            "execution_id": "401ac9884539422daf19914151e27b50",
+            "outputs": {
+              "message_id": "msg-401ac9884539422daf19914151e27b50",
+              "recipient": "reviewer"
+            }
+          }
+        ]
+      },
+      "reviewed": [
+        {
+          "request_hash": "d1f0371fbc9eaf333c92160897229f081666337692d3898200de1d8d63829735",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "create-ticket",
+            "title": "Evaluation incident 5",
+            "detail": "Verify queue latency"
+          },
+          "execution_id": "afa0c748ea9742518c3bf13b2d014dc1",
+          "planned_adapter": "mcp-review-tickets"
+        },
+        {
+          "request_hash": "6355409e41e7b4d55156581d49911a616fa9cced12c0b30f63541832ac6602b1",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "write-file",
+            "path": "reports/incident-5.txt",
+            "content": "Reference tkt-afa0c748ea9742518c3bf13b2d014dc1"
+          },
+          "execution_id": "d39c629e3957493985695e923c455107",
+          "planned_adapter": "local-write-file"
+        },
+        {
+          "request_hash": "9e609a31074ef0fc717d16d02e6cbc7ef2c7b931731621df9827feb023e4bad1",
+          "arguments": {
+            "schema_version": "v2",
+            "operation": "send-message",
+            "recipient": "reviewer",
+            "body": "Review tkt-afa0c748ea9742518c3bf13b2d014dc1 at reports/incident-5.txt"
+          },
+          "execution_id": "401ac9884539422daf19914151e27b50",
+          "planned_adapter": "local-send-message"
+        }
+      ],
+      "ticket_execution": {
+        "id": "afa0c748ea9742518c3bf13b2d014dc1",
+        "operation": "create-ticket",
+        "status": "succeeded",
+        "reason": null,
+        "created_at": 1795248077.3144152,
+        "updated_at": 1795248077.33872,
+        "approval_expires_at": 1795248977.3144152,
+        "receipt": {
+          "revision": 1,
+          "status": "open",
+          "ticket_id": "tkt-afa0c748ea9742518c3bf13b2d014dc1"
+        },
+        "requester": "requester",
+        "request_hash": "d1f0371fbc9eaf333c92160897229f081666337692d3898200de1d8d63829735",
+        "policy_revision": "62c6ea82fea5cba650a0fbc98e31f3086a88604374ee27bbc979c9b4b7b18102",
+        "adapter": "mcp-review-tickets",
+        "planned_adapter": "mcp-review-tickets",
+        "adapter_version": "1",
+        "registry_revision": "b659bff1d218666065c3d95738a87fd419d3ccc2191028b39a0d4dc81d27f634",
+        "mapping_revision": 1
+      },
+      "observed": {
+        "ticket": [
+          "Evaluation incident 5",
+          "Verify queue latency"
+        ],
+        "report": "Reference tkt-afa0c748ea9742518c3bf13b2d014dc1",
+        "inbox_matches": 1,
+        "local_fallbacks": 0
+      },
+      "passed": true
+    }
+  ],
+  "audit": {
+    "executions": 15,
+    "events": 60
+  },
+  "latency": {
+    "adapter": {
+      "count": 10,
+      "p50_ms": 0.0399,
+      "p95_ms": 0.7774
+    },
+    "intent_validation": {
+      "count": 15,
+      "p50_ms": 0.0093,
+      "p95_ms": 0.0112
+    },
+    "mcp_discovery": {
+      "count": 1,
+      "p50_ms": 50.562,
+      "p95_ms": 50.562
+    },
+    "mcp_mapping_approval": {
+      "count": 1,
+      "p50_ms": 18.2742,
+      "p95_ms": 18.2742
+    },
+    "mcp_transport": {
+      "count": 5,
+      "p50_ms": 19.0426,
+      "p95_ms": 19.3297
+    },
+    "persistence_checkpoint": {
+      "count": 5,
+      "p50_ms": 0.7579,
+      "p95_ms": 0.7663
+    },
+    "persistence_commit": {
+      "count": 10,
+      "p50_ms": 0.4743,
+      "p95_ms": 0.9595
+    },
+    "policy_decision": {
+      "count": 15,
+      "p50_ms": 0.0014,
+      "p95_ms": 0.0025
+    },
+    "registry_lookup": {
+      "count": 15,
+      "p50_ms": 0.0022,
+      "p95_ms": 0.0027
+    },
+    "scripted_approval": {
+      "count": 15,
+      "p50_ms": 1.6748,
+      "p95_ms": 1.7575
+    },
+    "scripted_workflow_total": {
+      "count": 5,
+      "p50_ms": 44.4489,
+      "p95_ms": 44.6866
+    },
+    "worker_round": {
+      "count": 15,
+      "p50_ms": 5.3555,
+      "p95_ms": 22.5117
+    },
+    "workflow_compile": {
+      "count": 5,
+      "p50_ms": 0.0651,
+      "p95_ms": 0.1761
+    },
+    "workflow_schedule": {
+      "count": 15,
+      "p50_ms": 1.3741,
+      "p95_ms": 1.5832
+    }
+  }
+}

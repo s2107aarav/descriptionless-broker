@@ -20,8 +20,11 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from .config import Settings, load_policy, load_registry
 from .contracts import Closed, Digest, INTENT, strict_json
 from .engine import Gateway, GatewayError
+from .labs import ComparisonRequest, LabReports, RecoveryRequest, provenance, run_comparison, run_recovery
+from .mcp_bridge import MappingRequest, McpGovernance
 from .planner import InvalidPlannerOutput, OllamaProvider, Planner, PlannerUnavailable
 from .store import Store, runtime_lock
+from .workflows import WorkflowPlan, Workflows, propose_workflow
 from .workspace import Workspace
 
 LOG = logging.getLogger(__name__)
@@ -107,11 +110,16 @@ async def parse_body(request: Request, *, validator):
 parse_intent = partial(parse_body, validator=INTENT.validate_python)
 parse_proposal = partial(parse_body, validator=ProposalRequest.model_validate)
 parse_decision = partial(parse_body, validator=Decision.model_validate)
+parse_workflow = partial(parse_body, validator=WorkflowPlan.model_validate)
+parse_mapping = partial(parse_body, validator=MappingRequest.model_validate)
+parse_comparison = partial(parse_body, validator=ComparisonRequest.model_validate)
+parse_recovery = partial(parse_body, validator=RecoveryRequest.model_validate)
 
 
 class Worker:
-    def __init__(self, gateway):
+    def __init__(self, gateway, workflows=None):
         self.gateway = gateway
+        self.workflows = workflows
         self.stopping = threading.Event()
         self.wakeup = threading.Event()
         self.healthy = threading.Event()
@@ -124,6 +132,8 @@ class Worker:
                 if needs_recovery:
                     self.gateway.recover()
                     needs_recovery = False
+                if self.workflows is not None:
+                    self.workflows.tick()
                 worked = self.gateway.run_once()
                 self.healthy.set()
                 if worked:
@@ -174,6 +184,8 @@ def historical_summary():
 def create_app(settings=None, *, planner=None):
     settings = settings if settings is not None else Settings.from_env()
     slots = threading.BoundedSemaphore(2)
+    lab_slot = threading.BoundedSemaphore(1)
+    discovery_slot = threading.BoundedSemaphore(2)
 
     @asynccontextmanager
     async def lifespan(app):
@@ -181,11 +193,15 @@ def create_app(settings=None, *, planner=None):
             store = Store(settings.root)
             store.migrate()
             with Workspace(settings.root) as workspace:
-                gateway = Gateway(store, load_policy(settings.root), load_registry(settings.root), workspace)
+                mcp = McpGovernance.load(store, settings.root)
+                gateway = Gateway(store, load_policy(settings.root), load_registry(settings.root), workspace, mcp=mcp)
                 gateway.recover()
                 app.state.gateway = gateway
+                app.state.mcp = mcp
+                app.state.workflows = Workflows(gateway)
+                app.state.labs = LabReports(store)
                 app.state.research = historical_summary()
-                with Worker(gateway) as worker:
+                with Worker(gateway, app.state.workflows) as worker:
                     app.state.worker = worker
                     yield
 
@@ -299,6 +315,106 @@ def create_app(settings=None, *, planner=None):
     @app.get("/api/v1/research")
     def research(request: Request, _principal=Depends(authenticated)):
         return request.app.state.research
+
+    @app.post("/api/v1/workflows/compile")
+    def workflow_compile(request: Request, principal=Depends(authenticated), plan=Depends(parse_workflow)):
+        _, order = request.app.state.workflows.compile(principal, plan)
+        return {"order": order}
+
+    @app.post("/api/v1/workflows/proposals")
+    def workflow_proposal(request: Request, principal=Depends(authenticated), body=Depends(parse_proposal)):
+        if principal.role == "reviewer":
+            raise HTTPException(403, "proposal_forbidden")
+        if not body.text.strip():
+            raise HTTPException(422, "empty_request")
+        provider = getattr(enabled_planner, "provider", None)
+        if provider is None:
+            raise HTTPException(503, "planner_not_configured")
+        if not slots.acquire(blocking=False):
+            raise HTTPException(429, "planner_at_capacity")
+        try:
+            plan = propose_workflow(provider, body.text)
+        except PlannerUnavailable as exc:
+            raise HTTPException(503, "planner_unavailable") from exc
+        except InvalidPlannerOutput as exc:
+            raise HTTPException(502, "planner_output_invalid") from exc
+        finally:
+            slots.release()
+        if plan is None:
+            return {"status": "clarification_required", "plan": None, "order": []}
+        _, order = request.app.state.workflows.compile(principal, plan)
+        return {"status": "proposed", "plan": plan.model_dump(), "order": order}
+
+    @app.post("/api/v1/workflows")
+    def workflow_submit(request: Request, key: Annotated[str, Header(alias="Idempotency-Key", min_length=8, max_length=128)],
+                        principal=Depends(authenticated), plan=Depends(parse_workflow)):
+        workflow, new = request.app.state.workflows.submit(principal, key, plan)
+        request.app.state.worker.wakeup.set()
+        return JSONResponse(workflow, status_code=201 if new else 200)
+
+    @app.get("/api/v1/workflows")
+    def workflow_list(request: Request, principal=Depends(authenticated)):
+        return request.app.state.workflows.get(principal)
+
+    @app.get("/api/v1/workflows/{workflow_id}")
+    def workflow_detail(request: Request, workflow_id: ExecutionId, principal=Depends(authenticated)):
+        return request.app.state.workflows.get(principal, workflow_id)
+
+    @app.get("/api/v1/mcp")
+    def mcp_overview(request: Request, principal=Depends(authenticated)):
+        return request.app.state.mcp.overview(principal)
+
+    @app.get("/api/v1/mcp/servers/{server_id}/tools")
+    def mcp_discover(request: Request, server_id: Annotated[str, PathParam(pattern=r"^[a-z0-9][a-z0-9_-]{0,39}$")],
+                     principal=Depends(authenticated)):
+        if not discovery_slot.acquire(blocking=False):
+            raise HTTPException(429, "mcp_discovery_at_capacity")
+        try:
+            return request.app.state.mcp.inspect(principal, server_id)
+        finally:
+            discovery_slot.release()
+
+    @app.post("/api/v1/mcp/mappings")
+    def mcp_register(request: Request, principal=Depends(authenticated), mapping=Depends(parse_mapping)):
+        if not discovery_slot.acquire(blocking=False):
+            raise HTTPException(429, "mcp_discovery_at_capacity")
+        try:
+            result = request.app.state.mcp.register(principal, mapping)
+            request.app.state.worker.wakeup.set()
+            return result
+        finally:
+            discovery_slot.release()
+
+    @app.get("/api/v1/labs")
+    def lab_list(request: Request, principal=Depends(authenticated)):
+        return request.app.state.labs.get(principal)
+
+    def run_lab(request, principal, kind, arguments, run):
+        if not lab_slot.acquire(blocking=False):
+            raise HTTPException(429, "lab_at_capacity")
+        try:
+            try:
+                report = run()
+            except GatewayError as exc:
+                if exc.status < 500:
+                    raise
+                report = {**arguments.model_dump(), "status": "invalid", "reason": exc.code,
+                          "provenance": provenance(kind)}
+            return request.app.state.labs.record(principal, kind, report)
+        finally:
+            lab_slot.release()
+
+    @app.post("/api/v1/labs/recovery")
+    def recovery_lab(request: Request, principal=Depends(authenticated), scenario=Depends(parse_recovery)):
+        return run_lab(request, principal, "recovery", scenario, lambda: run_recovery(scenario))
+
+    @app.post("/api/v1/labs/comparison")
+    def comparison_lab(request: Request, principal=Depends(authenticated), scenario=Depends(parse_comparison)):
+        return run_lab(request, principal, "comparison", scenario, lambda: run_comparison(scenario, settings))
+
+    @app.get("/api/v1/labs/{run_id}")
+    def lab_detail(request: Request, run_id: ExecutionId, principal=Depends(authenticated)):
+        return request.app.state.labs.get(principal, run_id)
 
     return app
 

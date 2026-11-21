@@ -1,13 +1,18 @@
 import type { ReactNode } from "react";
 import { explain, LABELS, STATUS_LABELS, type Decision, type Event, type Execution, type InboxMessage, type ResearchReport, type Status } from "../lib/gateway";
 
-export type IconName = "workspace" | "approvals" | "history" | "inbox" | "research" | "refresh" | "arrow" | "box" | "shield";
+export type IconName = "workspace" | "approvals" | "history" | "inbox" | "research" | "refresh" | "arrow" | "box" | "shield"
+  | "workflows" | "mcp" | "comparison" | "recovery";
 
 const ICONS: Record<IconName, ReactNode> = {
   workspace: <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="m7 9 3 3-3 3m6 0h4" /></>,
   approvals: <><path d="M12 3 4 6v5c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-3Z" /><path d="m8.5 12 2.5 2.5 4.5-5" /></>,
   history: <><path d="M3 12a9 9 0 1 1 3 6.7M3 12V6m0 6h6m3-5v5l3 2" /></>,
   inbox: <><path d="M3 13 6 5h12l3 8v6H3v-6Z" /><path d="M3 13h6l1 2h4l1-2h6" /></>,
+  workflows: <><rect x="3" y="9" width="5" height="6" rx="1" /><rect x="16" y="3" width="5" height="6" rx="1" /><rect x="16" y="15" width="5" height="6" rx="1" /><path d="M8 12h4m0-6v12m0-12h4m-4 12h4" /></>,
+  mcp: <><rect x="3" y="4" width="18" height="7" rx="2" /><rect x="3" y="13" width="18" height="7" rx="2" /><path d="M7 7.5h.01m-.01 9h.01M11 7.5h6m-6 9h6" /></>,
+  comparison: <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M12 4v16m-6-8h3m6 0h3M16.5 10.5v3" /></>,
+  recovery: <><path d="M3 12a9 9 0 1 1 3 6.7M3 12V6m0 6h6" /><path d="m13 7-3 5h4l-3 5" /></>,
   research: <><path d="M5 19V5m0 14h15M9 15v-3m4 3V8m4 7v-5" /></>,
   refresh: <><path d="M19 10a7 7 0 0 0-12-4L4 9m0-5v5h5m-4 5a7 7 0 0 0 12 4l3-3m-5 0h5v5" /></>,
   arrow: <path d="M5 12h14m-6-6 6 6-6 6" />,
@@ -148,6 +153,7 @@ export function ApprovalReview({ row, busy, onDecision }: { row: Execution; busy
       <div className="detail-body">
         <dl className="detail-meta">
           <div><dt>Requester</dt><dd>{row.requester ?? "Unavailable"}</dd></div>
+          {row.planned_adapter && <div><dt>Planned adapter</dt><dd><code>{row.planned_adapter}</code></dd></div>}
           {row.approval_expires_at && <div><dt>Expires</dt><dd>{timestamp(row.approval_expires_at)}</dd></div>}
           {row.policy_revision && <div><dt>Policy revision</dt><dd><code>{row.policy_revision}</code></dd></div>}
         </dl>

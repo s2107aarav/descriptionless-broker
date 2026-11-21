@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Annotated, Literal
 from urllib.parse import urlsplit
 
-from pydantic import Field, StringConstraints, TypeAdapter
+from pydantic import ConfigDict, Field, StringConstraints, TypeAdapter
 
 from .contracts import Closed, OPERATIONS, Slug, fingerprint, strict_json
 
@@ -60,6 +60,7 @@ class Policy(Closed):
 
 
 class AdapterSpec(Closed):
+    model_config = ConfigDict(frozen=True)
     adapter_id: Slug
     operation: str
     implementation: Slug
@@ -67,9 +68,10 @@ class AdapterSpec(Closed):
     priority: Annotated[int, Field(ge=0, le=1000)] = 10
     enabled: bool = True
     description: Annotated[str, StringConstraints(max_length=512)] = ""
+    mapping_revision: Annotated[int, Field(ge=1)] | None = None
 
     def routing_identity(self):
-        return self.model_dump(exclude={"description"})
+        return self.model_dump(exclude={"description"}, exclude_none=True)
 
 
 def default_adapters():
@@ -82,7 +84,9 @@ class Registry:
         if len({entry.adapter_id for entry in self.entries}) != len(self.entries):
             raise ValueError("Duplicate adapter ID")
         for entry in self.entries:
-            if entry.operation not in OPERATIONS or entry.implementation != entry.operation:
+            local = entry.implementation == entry.operation and entry.mapping_revision is None
+            external = entry.operation == "create-ticket" and entry.implementation == "mcp-ticket" and entry.mapping_revision is not None
+            if entry.operation not in OPERATIONS or not (local or external):
                 raise ValueError("Adapter implementation is incompatible with its operation")
         self.revision = fingerprint([entry.routing_identity() for entry in self.entries])
 
@@ -110,7 +114,10 @@ def load_policy(root):
 
 def load_registry(root):
     adapter_list = TypeAdapter(Annotated[list[AdapterSpec], Field(max_length=50)])
-    return Registry(parse_config(root / "registry.json", adapter_list.validate_python, default_adapters))
+    entries = parse_config(root / "registry.json", adapter_list.validate_python, default_adapters)
+    if any(entry.mapping_revision is not None or entry.adapter_id.startswith("mcp-") for entry in entries):
+        raise ValueError("MCP mappings must be approved through the gateway registry")
+    return Registry(entries)
 
 
 def ensure_private_directory(path):

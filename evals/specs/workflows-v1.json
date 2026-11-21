@@ -1,0 +1,6 @@
+{
+  "version": "workflow-v1",
+  "workload": "Create an incident ticket, write a reference into a workspace report, and notify the registered reviewer with the exact ticket reference.",
+  "expected": "Each write waits for approval of its resolved arguments. A failed, denied or uncertain predecessor blocks dependents. Replays do not create new executions; an interrupted worker recovers the same graph and operation identities.",
+  "limits": "One worker schedules bounded declarative DAGs. Independent operations can partially complete. Compensation is not assumed."
+}

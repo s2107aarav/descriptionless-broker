@@ -1,0 +1,200 @@
+{
+  "spec_sha256": "8e88a81f985335e9de985f6c103131ed8f2873a3dd4a19482c7685d0a61ff417",
+  "mapping": {
+    "adapter_id": "mcp-review-tickets",
+    "server_id": "review-tickets",
+    "tool": "create_incident_ticket",
+    "schema_sha256": "9a249ede6a5bf0495c5378718458062b21c0c00fd885011395d81b150e724bbc",
+    "revision": 1,
+    "priority": 0,
+    "enabled": true,
+    "actor": "reviewer",
+    "recorded_at": 1795248077.129892
+  },
+  "discovery": {
+    "tools": [
+      {
+        "name": "create_incident_ticket",
+        "description": "Create an incident ticket in the local ticket service.",
+        "input_schema": {
+          "additionalProperties": false,
+          "properties": {
+            "detail": {
+              "maxLength": 4000,
+              "minLength": 1,
+              "pattern": "\\S",
+              "title": "Detail",
+              "type": "string"
+            },
+            "execution_id": {
+              "pattern": "^[0-9a-f]{32}$",
+              "title": "Execution Id",
+              "type": "string"
+            },
+            "title": {
+              "maxLength": 120,
+              "minLength": 1,
+              "pattern": "\\S",
+              "title": "Title",
+              "type": "string"
+            }
+          },
+          "required": [
+            "execution_id",
+            "title",
+            "detail"
+          ],
+          "title": "TicketArguments",
+          "type": "object"
+        },
+        "schema_sha256": "9a249ede6a5bf0495c5378718458062b21c0c00fd885011395d81b150e724bbc",
+        "compatible": true
+      },
+      {
+        "name": "get_incident_ticket",
+        "description": "Read the ticket recorded for a gateway execution.",
+        "input_schema": {
+          "additionalProperties": false,
+          "properties": {
+            "execution_id": {
+              "pattern": "^[0-9a-f]{32}$",
+              "title": "Execution Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "execution_id"
+          ],
+          "title": "TicketReadArguments",
+          "type": "object"
+        },
+        "schema_sha256": "20b4e986b56d3fc5c201c7023a0999e9928398f6e27799eecbf04d59213353d0",
+        "compatible": false
+      }
+    ],
+    "argument_mapping": {
+      "execution_id": "Gateway execution ID",
+      "title": "Intent title",
+      "detail": "Intent detail"
+    }
+  },
+  "checks": [
+    {
+      "ticket": [
+        "Evaluation incident 1",
+        "Verify queue latency"
+      ],
+      "report": "Reference tkt-9655f0c1241e4cf1804f3959bc337328",
+      "inbox_matches": 1,
+      "local_fallbacks": 0
+    },
+    {
+      "ticket": [
+        "Evaluation incident 2",
+        "Verify queue latency"
+      ],
+      "report": "Reference tkt-a28ca4b878f74858b5a806c4f4dc70a1",
+      "inbox_matches": 1,
+      "local_fallbacks": 0
+    },
+    {
+      "ticket": [
+        "Evaluation incident 3",
+        "Verify queue latency"
+      ],
+      "report": "Reference tkt-e3676cdb14014efe82c3fdd1829cea94",
+      "inbox_matches": 1,
+      "local_fallbacks": 0
+    },
+    {
+      "ticket": [
+        "Evaluation incident 4",
+        "Verify queue latency"
+      ],
+      "report": "Reference tkt-e716f16a2e4d45c7a6c2fdc30e684cb9",
+      "inbox_matches": 1,
+      "local_fallbacks": 0
+    },
+    {
+      "ticket": [
+        "Evaluation incident 5",
+        "Verify queue latency"
+      ],
+      "report": "Reference tkt-afa0c748ea9742518c3bf13b2d014dc1",
+      "inbox_matches": 1,
+      "local_fallbacks": 0
+    }
+  ],
+  "latency": {
+    "adapter": {
+      "count": 10,
+      "p50_ms": 0.0399,
+      "p95_ms": 0.7774
+    },
+    "intent_validation": {
+      "count": 15,
+      "p50_ms": 0.0093,
+      "p95_ms": 0.0112
+    },
+    "mcp_discovery": {
+      "count": 1,
+      "p50_ms": 50.562,
+      "p95_ms": 50.562
+    },
+    "mcp_mapping_approval": {
+      "count": 1,
+      "p50_ms": 18.2742,
+      "p95_ms": 18.2742
+    },
+    "mcp_transport": {
+      "count": 5,
+      "p50_ms": 19.0426,
+      "p95_ms": 19.3297
+    },
+    "persistence_checkpoint": {
+      "count": 5,
+      "p50_ms": 0.7579,
+      "p95_ms": 0.7663
+    },
+    "persistence_commit": {
+      "count": 10,
+      "p50_ms": 0.4743,
+      "p95_ms": 0.9595
+    },
+    "policy_decision": {
+      "count": 15,
+      "p50_ms": 0.0014,
+      "p95_ms": 0.0025
+    },
+    "registry_lookup": {
+      "count": 15,
+      "p50_ms": 0.0022,
+      "p95_ms": 0.0027
+    },
+    "scripted_approval": {
+      "count": 15,
+      "p50_ms": 1.6748,
+      "p95_ms": 1.7575
+    },
+    "scripted_workflow_total": {
+      "count": 5,
+      "p50_ms": 44.4489,
+      "p95_ms": 44.6866
+    },
+    "worker_round": {
+      "count": 15,
+      "p50_ms": 5.3555,
+      "p95_ms": 22.5117
+    },
+    "workflow_compile": {
+      "count": 5,
+      "p50_ms": 0.0651,
+      "p95_ms": 0.1761
+    },
+    "workflow_schedule": {
+      "count": 15,
+      "p50_ms": 1.3741,
+      "p95_ms": 1.5832
+    }
+  }
+}

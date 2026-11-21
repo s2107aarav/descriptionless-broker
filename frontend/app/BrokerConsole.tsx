@@ -1,54 +1,33 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import {
   gateway, itemPath, LABELS, type Decision, type Event, type Execution, type InboxMessage, type Proposal, type Research, type Session,
 } from "../lib/gateway";
+import { errorText, useQuery } from "../lib/useGateway";
 import {
   ApprovalReview, Empty, ExecutionDetail, HistoryTable, Icon, InboxList, RecentList, ResearchCard, StatusPill, timestamp,
 } from "./ConsoleViews";
 import { draftToIntent, IntentEditor, makeDraft, proposalToDraft, type Draft, type EntryMode } from "./IntentEditor";
+import { WorkflowWorkbench } from "./WorkflowWorkbench";
+import { McpWorkbench } from "./McpWorkbench";
+import { LabWorkbench } from "./LabWorkbench";
 
 const VIEWS = {
   workspace: { nav: "Workspace", title: "Intent workspace", description: "Submit a typed intent or turn a natural-language request into a proposal." },
   approvals: { nav: "Approvals", title: "Approvals", description: "Review the exact action before authorizing execution." },
   history: { nav: "History", title: "Execution history", description: "Inspect receipts, decisions and changes to execution status." },
   inbox: { nav: "Inbox", title: "Local inbox", description: "Messages delivered to your authenticated principal." },
+  workflows: { nav: "Workflows", title: "Workflows", description: "Validate dependency graphs and follow each step through approval, execution and receipt." },
+  mcp: { nav: "MCP Registry", title: "MCP registry", description: "Inspect capabilities and approve mappings from trusted intents to allowlisted servers." },
+  comparison: { nav: "Comparison Lab", title: "Comparison lab", description: "Compare model decisions and observed effects across matched metadata conditions." },
+  recovery: { nav: "Recovery Lab", title: "Recovery lab", description: "Interrupt a disposable worker at a chosen boundary and inspect the evidence after restart." },
   research: { nav: "Research", title: "Research evidence", description: "Historical evaluations of implementation metadata isolation." },
 } as const;
 type View = keyof typeof VIEWS;
 type Access = { token: string; session: Session };
 const HISTORY_PAGE_SIZE = 15;
-
-function errorText(error: unknown) {
-  return error instanceof Error ? error.message : "The request failed.";
-}
-
-function useQuery<T>(path: string | null, token: string | undefined, version: number, delay = 0) {
-  type Snapshot = { path: string; data: T | null; error: string };
-  const [snapshot, setSnapshot] = useState<Snapshot>();
-  useEffect(() => {
-    if (!path || !token) return;
-    const controller = new AbortController();
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    async function refresh() {
-      try {
-        const data = await gateway<T>(path!, token!, { signal: controller.signal });
-        if (!controller.signal.aborted) setSnapshot({ path: path!, data, error: "" });
-      } catch (error) {
-        if (!controller.signal.aborted) {
-          setSnapshot(previous => ({ path: path!, data: previous?.path === path ? previous.data : null, error: errorText(error) }));
-        }
-      } finally {
-        if (!controller.signal.aborted && delay > 0) timer = setTimeout(refresh, delay);
-      }
-    }
-    void refresh();
-    return () => { controller.abort(); clearTimeout(timer); };
-  }, [path, token, version, delay]);
-  return path && snapshot?.path === path ? snapshot : { data: null, error: "" };
-}
 
 function AccessControl({ access, onConnect, onDisconnect }: {
   access: Access | null;
@@ -127,6 +106,7 @@ function ConsoleSession({ access, onConnect, onDisconnect }: {
   const [notice, setNotice] = useState("");
   const actionLock = useRef(false);
   const pending = useRef(new Map<string, string>());
+  const workflowKeys = useRef(new Map<string, string>());
   const token = access?.token;
   const role = access?.session.role;
   const canSubmit = role === "requester" || role === "agent";
@@ -159,6 +139,10 @@ function ConsoleSession({ access, onConnect, onDisconnect }: {
     setHistoryCursors([]);
     setSelected(id);
     open("history");
+  }
+  function openApproval(id: string) {
+    setApprovalId(id);
+    open("approvals");
   }
   async function act(fn: () => Promise<void>) {
     if (actionLock.current) return;
@@ -235,7 +219,8 @@ function ConsoleSession({ access, onConnect, onDisconnect }: {
         <nav aria-label="Console">
           <p className="nav-group">Execution</p>
           {(Object.keys(VIEWS) as View[]).map(key => (
-            <div key={key} className={key === "research" ? "nav-reference" : undefined}>
+            <div key={key} className={key === "comparison" || key === "research" ? "nav-reference" : undefined}>
+              {key === "comparison" && <p className="nav-group">Experiments</p>}
               {key === "research" && <p className="nav-group">Reference</p>}
               <button type="button" disabled={busy} onClick={() => open(key)} aria-current={view === key ? "page" : undefined}>
                 <Icon name={key} /><span>{VIEWS[key].nav}</span>
@@ -320,6 +305,13 @@ function ConsoleSession({ access, onConnect, onDisconnect }: {
               {messages.data ? <InboxList messages={messages.data} /> :
                 !messages.error && <p className="list-status" role="status">Loading inbox…</p>}
             </section>
+          ) : view === "workflows" ? (
+            <WorkflowWorkbench token={token} role={access.session.role} version={version} onExecution={openHistory}
+              onApproval={openApproval} requestKeys={workflowKeys} />
+          ) : view === "mcp" ? (
+            <McpWorkbench token={token} role={access.session.role} version={version} />
+          ) : view === "comparison" || view === "recovery" ? (
+            <LabWorkbench key={view} kind={view} token={token} version={version} />
           ) : research.data ? (
             <div className="view-stack">
               <div className="research-grid">

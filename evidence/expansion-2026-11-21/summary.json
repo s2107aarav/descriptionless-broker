@@ -1,0 +1,123 @@
+{
+  "status": "passed",
+  "counts": {
+    "workflow_passes": 5,
+    "workflows": 5,
+    "recovery_passes": 8,
+    "recovery_cases": 8,
+    "verified_comparison_cells": 8,
+    "comparison_cells": 8
+  },
+  "environment": {
+    "spec": "integrated-v1",
+    "spec_sha256": "027924b850b278f9ad523d8ddee6f73ae64665202ce51390f018bddf10b65317",
+    "python": "3.12.0",
+    "sqlite": "3.42.0",
+    "platform": "macOS-26.3.1-arm64-arm-64bit",
+    "source_sha256": {
+      "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+      "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+      "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+      "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+      "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+      "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+      "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58"
+    },
+    "sources": {
+      "gateway/__init__.py": "c574505abf245bb284e3f3b97aa41d2b41b8b631d2194ca59069cfc49fd32026",
+      "gateway/__main__.py": "4be6cec0f3620adaab8aa5e1cb6389b1ad0b1da43d7a9b801cce54c9f964c655",
+      "gateway/adapters.py": "96c51e46cfbccae8e26e2fe5b77789fea31d5d197a8670bf4bc0b99307fbe5be",
+      "gateway/api.py": "eadb54d87241040ad2da122a8262d352caa0ec63381b72afe156960041c30f62",
+      "gateway/config.py": "12f07a6dbfedfa60da74e6cba7f0a3b2785365393f3d2502386524fa0f147ee4",
+      "gateway/contracts.py": "0179e3d63763dacbe96acf1d7b5833c1f47a19c7c155dc60e4470c4d40fb9d5c",
+      "gateway/engine.py": "e57b30a3b8215dabccf59ab1470e7d575f14779bb16d6cf1d9ae5c4b623c1d92",
+      "gateway/lab_worker.py": "4f9bb86d39eae1f596a0e96417a22f035300be4fabdb37f34123210db96a8626",
+      "gateway/labs.py": "98a668b0b298443c1e696fcda3ff8de61602f82b258886b012b4ff9ba57d55b6",
+      "gateway/mcp_bridge.py": "cf07ad7b6b23e7b88923ea005ddcbc5b1687dc1e7225325997fff4ac4360c085",
+      "gateway/mcp_service.py": "96b1a6ec752a09d988181fc2eb60540115810769d1765058cad9ddb2d34cc656",
+      "gateway/planner.py": "9512a11da94d5a12a9ba459ebad8437e4777dd3ddefa433412915222c4cc8c58",
+      "gateway/store.py": "c765d3a5784317e306dbea821e23a5a1b538492317b1676ffaabff338f452a5b",
+      "gateway/workflows.py": "d0e5a7a1bd9e44edcceb796400cb5fc9cafb1d181d9cb45a2ba8caddb4eb4899",
+      "gateway/workspace.py": "afc6c4ac544ce7756b3c2e8548b1c6f8e44de1be8c820869a29227ef4710eba3",
+      "evals/expansion_evaluate.py": "c09866aaf4ffe34b97a53364f23fef54681211b0920c0371992b1402c75602c4",
+      "requirements-lock.txt": "713af2a902807021f5620205e8ac08bc1b50310a46ee6f3c69606810d53c6a05"
+    },
+    "hardware": "Apple M1"
+  },
+  "live_model": [
+    "not_run",
+    "not_run"
+  ],
+  "latency": {
+    "adapter": {
+      "count": 10,
+      "p50_ms": 0.0399,
+      "p95_ms": 0.7774
+    },
+    "intent_validation": {
+      "count": 15,
+      "p50_ms": 0.0093,
+      "p95_ms": 0.0112
+    },
+    "mcp_discovery": {
+      "count": 1,
+      "p50_ms": 50.562,
+      "p95_ms": 50.562
+    },
+    "mcp_mapping_approval": {
+      "count": 1,
+      "p50_ms": 18.2742,
+      "p95_ms": 18.2742
+    },
+    "mcp_transport": {
+      "count": 5,
+      "p50_ms": 19.0426,
+      "p95_ms": 19.3297
+    },
+    "persistence_checkpoint": {
+      "count": 5,
+      "p50_ms": 0.7579,
+      "p95_ms": 0.7663
+    },
+    "persistence_commit": {
+      "count": 10,
+      "p50_ms": 0.4743,
+      "p95_ms": 0.9595
+    },
+    "policy_decision": {
+      "count": 15,
+      "p50_ms": 0.0014,
+      "p95_ms": 0.0025
+    },
+    "registry_lookup": {
+      "count": 15,
+      "p50_ms": 0.0022,
+      "p95_ms": 0.0027
+    },
+    "scripted_approval": {
+      "count": 15,
+      "p50_ms": 1.6748,
+      "p95_ms": 1.7575
+    },
+    "scripted_workflow_total": {
+      "count": 5,
+      "p50_ms": 44.4489,
+      "p95_ms": 44.6866
+    },
+    "worker_round": {
+      "count": 15,
+      "p50_ms": 5.3555,
+      "p95_ms": 22.5117
+    },
+    "workflow_compile": {
+      "count": 5,
+      "p50_ms": 0.0651,
+      "p95_ms": 0.1761
+    },
+    "workflow_schedule": {
+      "count": 15,
+      "p50_ms": 1.3741,
+      "p95_ms": 1.5832
+    }
+  }
+}

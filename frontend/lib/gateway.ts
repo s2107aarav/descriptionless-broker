@@ -39,6 +39,7 @@ export type Execution = {
   policy_revision?: string;
   requested_intent?: Intent;
   requester?: string;
+  planned_adapter?: string | null;
   adapter?: string | null;
   adapter_version?: string | null;
   registry_revision?: string | null;
@@ -86,16 +87,23 @@ export async function gateway<T>(path: string, token: string, init: RequestInit 
   headers.set("Authorization", `Bearer ${token}`);
   if (init.body) headers.set("Content-Type", "application/json");
 
-  const timeout = AbortSignal.timeout(path === "/proposals" ? 70_000 : 12_000);
+  const submittingLab = init.method === "POST" && path.startsWith("/labs/");
+  const timeout = AbortSignal.timeout(path === "/workflows/proposals" ? 95_000 :
+    submittingLab ? 80_000 : path === "/proposals" ? 70_000 : 12_000);
   const signal = init.signal ? AbortSignal.any([timeout, init.signal]) : timeout;
   let response: Response;
   try {
     response = await fetch(`${API_URL}/api/v1${path}`, { ...init, cache: "no-store", headers, signal });
   } catch (error) {
     if (init.signal?.aborted) throw error;
-    throw new Error(timeout.aborted
-      ? "The gateway did not respond in time. You can retry this submission with the same request key."
-      : "Could not reach the gateway. Check that the local backend is running.");
+    if (timeout.aborted) {
+      if (headers.has("Idempotency-Key")) {
+        throw new Error("The gateway did not respond in time. You can retry this submission with the same request key.");
+      }
+      throw new Error(submittingLab ? "The gateway did not respond in time. Check previous runs before starting another." :
+        "The gateway did not respond in time.");
+    }
+    throw new Error("Could not reach the gateway. Check that the local backend is running.");
   }
   if (response.ok) return response.json() as Promise<T>;
 

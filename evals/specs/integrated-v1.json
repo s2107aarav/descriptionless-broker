@@ -1,0 +1,8 @@
+{
+  "version": "integrated-v1",
+  "repetitions": 5,
+  "workflow": "Independently examine the MCP ticket, local report and local recipient inbox after the exact three-step approval sequence.",
+  "threshold": "All scripted workflows pass, all predeclared recovery cases pass, both neutral comparison matrices show four correct sandbox effects and paired protected prompt equality.",
+  "performance": "Record counts and nearest-rank p50/p95 on this host. Human waiting is excluded. MCP samples include the local lookup, dispatch and readback transport.",
+  "safety": "Only fixed synthetic tasks, ephemeral data roots, explicit loopback transport and no third-party effect destinations."
+}

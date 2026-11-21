@@ -1,0 +1,47 @@
+{
+  "fixture": "private disposable loopback gateway and standalone MCP service",
+  "gateway_ticket_rows": 0,
+  "mcp_ticket_rows": 1,
+  "workflow": [
+    {
+      "operation": "create-ticket",
+      "adapter": "mcp-tickets",
+      "status": "succeeded"
+    },
+    {
+      "operation": "write-file",
+      "adapter": "local-write-file",
+      "status": "succeeded"
+    },
+    {
+      "operation": "send-message",
+      "adapter": "local-send-message",
+      "status": "succeeded"
+    }
+  ],
+  "report_matches": true,
+  "inbox_matches": true,
+  "comparison": {
+    "mode": "offline",
+    "cells": 4,
+    "correct": 4
+  },
+  "recovery": [
+    {
+      "classification": "proven_success",
+      "independent_check_passed": true
+    },
+    {
+      "classification": "outcome_unknown",
+      "independent_check_passed": true
+    }
+  ],
+  "screenshots": [
+    "comparison.png",
+    "exact-approval.png",
+    "mcp-registry.png",
+    "recovery-success.png",
+    "recovery-unknown.png",
+    "workflow-inspector.png"
+  ]
+}
